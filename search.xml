@@ -18,4 +18,10 @@
 <p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 ]]></content>
   </entry>
+  <entry>
+    <title>test</title>
+    <url>/2021/03/09/test/</url>
+    <content><![CDATA[<h1 id="测试一下图床与页面"><a href="#测试一下图床与页面" class="headerlink" title="测试一下图床与页面"></a>测试一下图床与页面</h1><p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/test/first.png"></p>
+]]></content>
+  </entry>
 </search>
