@@ -1,20 +1,191 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search> 
-  
-  
-    
-    <entry>
-      <title>test</title>
-      <link href="2021/03/09/test/"/>
-      <url>2021/03/09/test/</url>
-      
-        <content type="html"><![CDATA[<h1 id="测试一下图床与页面"><a href="#测试一下图床与页面" class="headerlink" title="测试一下图床与页面"></a>测试一下图床与页面</h1><p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/test/first.png"></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> ..<br>git push<br></code></pre></td></tr></table></figure>]]></content>
-      
-      
-      
-    </entry>
-    
-    
-  
-  
+<search>
+  <entry>
+    <title>Hexo 写作规范</title>
+    <url>/2021/03/10/hexoStudy/</url>
+    <content><![CDATA[<h1 id="Hexo-写作规范"><a href="#Hexo-写作规范" class="headerlink" title="Hexo 写作规范"></a>Hexo 写作规范</h1><p>Hexo 是一个快速、简洁且高效的博客框架。</p>
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><ul>
+<li><p>创建一篇新文章：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ hexo new [layout] &lt;title&gt;<br></code></pre></td></tr></table></figure>
+
+<p><code>[layout]</code>：页面布局，可取值：<code>post</code> (默认)、<code>page</code>、<code>draft</code>，对应的存放路径分别为<code>source/_post</code>、<code>source</code>、<code>source/_drafts</code>；</p>
+<p><code>&lt;title&gt;</code>：文章标题，当标题含有空格时，应用<code>&quot;&quot;</code>括起来</p>
+</li>
+<li><p>生成静态文件 (<code>pulic</code>)：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ hexo generate <br>$ hexo g<br>$ hexo g -d <span class="hljs-comment"># 文件生成后立即部署网站</span><br></code></pre></td></tr></table></figure></li>
+<li><p>启动服务器：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ hexo server<br>$ hexo s	<span class="hljs-comment"># 默认访问路径为: http://localhost:4000/</span><br>$ hexo s -p <span class="hljs-comment"># 重设端口	  == --port</span><br>$ hexo s -l <span class="hljs-comment"># 启动日志记录 == --log</span><br></code></pre></td></tr></table></figure></li>
+<li><p>部署网站：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ hexo deploy<br>$ hexo d<br>$ hexo d -g <span class="hljs-comment"># 部署之前预生成静态文件</span><br></code></pre></td></tr></table></figure></li>
+<li><p>清除缓存文件 (<code>db.json</code>) 和已生成的静态文件 (<code>public</code>)：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ hexo clean<br></code></pre></td></tr></table></figure></li>
+<li><p>列出网站资料（<code>page</code>、<code>post</code>、<code>tag</code>等)：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ hexo list &lt;<span class="hljs-built_in">type</span>&gt;  <span class="hljs-comment"># == l</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="Front-matter"><a href="#Front-matter" class="headerlink" title="Front-matter"></a>Front-matter</h2><p>Front-matter 是文件最上方以 <code>---</code> 分隔的区域，用于指定个别文件的变量</p>
+<table>
+<thead>
+<tr>
+<th align="center">常用参数</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>title</code></td>
+<td align="center">标题</td>
+</tr>
+<tr>
+<td align="center"><code>date</code></td>
+<td align="center">建立日期</td>
+</tr>
+<tr>
+<td align="center"><code>update</code></td>
+<td align="center">更新日期</td>
+</tr>
+<tr>
+<td align="center"><code>tags</code></td>
+<td align="center">标签</td>
+</tr>
+<tr>
+<td align="center"><code>categories</code></td>
+<td align="center">分类</td>
+</tr>
+<tr>
+<td align="center"><code>permalink</code></td>
+<td align="center">覆盖文章网址</td>
+</tr>
+</tbody></table>
+<h3 id="分类与标签"><a href="#分类与标签" class="headerlink" title="分类与标签"></a>分类与标签</h3><p>分类具有顺序性和层次性，而标签可同时存在多个</p>
+<p>使用方式：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># 第一种方式</span><br><span class="hljs-attr">categories:</span><br><span class="hljs-bullet">-</span> <span class="hljs-string">Diary</span><br><span class="hljs-attr">tags:</span><br><span class="hljs-bullet">-</span> <span class="hljs-string">PS3</span><br><span class="hljs-bullet">-</span> <span class="hljs-string">Games</span><br><br><span class="hljs-comment"># 第二种方式</span><br><span class="hljs-attr">categories:</span> <span class="hljs-string">Diary</span><br><span class="hljs-attr">tags:</span> [<span class="hljs-string">PS3</span>, <span class="hljs-string">Games</span>]<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="Fluid-专用的页面属性"><a href="#Fluid-专用的页面属性" class="headerlink" title="Fluid 专用的页面属性"></a>Fluid 专用的页面属性</h3><p>本页面采用的主题为 <a href="https://fluid-dev.github.io/">Fluid</a>，可通过在 Front-matter 中单独配置页面属性：</p>
+<table>
+<thead>
+<tr>
+<th align="center">Fluid参数</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>banner_img</code></td>
+<td align="center">页面顶部大图</td>
+</tr>
+<tr>
+<td align="center"><code>banner_img_height</code></td>
+<td align="center">页面顶部图高(60)</td>
+</tr>
+<tr>
+<td align="center"><code>banner_mask_alpha</code></td>
+<td align="center">顶部图的透明度(0.5)</td>
+</tr>
+<tr>
+<td align="center"><code>excerpt</code></td>
+<td align="center">文件摘要(默认为自动摘要)</td>
+</tr>
+<tr>
+<td align="center"><code>hide</code></td>
+<td align="center">隐藏文章(true)</td>
+</tr>
+<tr>
+<td align="center"><code>stcky</code></td>
+<td align="center">文章排序(100)，数字越大越靠前</td>
+</tr>
+<tr>
+<td align="center"><code>index_img</code></td>
+<td align="center">文章在首页的封面图</td>
+</tr>
+</tbody></table>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>正文中一般使用 <code>Markdown</code> 格式，这里推荐 <a href="https://typora.io/">Typora</a></p>
+<p>以下方法皆是 Fluid 内置语法格式：</p>
+<h3 id="脚注"><a href="#脚注" class="headerlink" title="脚注"></a>脚注</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><code class="hljs markdown">正文<br>这是一句话[^1]<br><br><span class="hljs-section">## 参考</span><br>[<span class="hljs-symbol">^1</span>]: <span class="hljs-link">参考资料1</span><br>[<span class="hljs-symbol">^2</span>]: <span class="hljs-link">参考资料2</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="Tag插件"><a href="#Tag插件" class="headerlink" title="Tag插件"></a>Tag插件</h3><h4 id="便签"><a href="#便签" class="headerlink" title="便签"></a>便签</h4><figure class="highlight markdown"><table><tr><td class="code"><pre><code class="hljs markdown">&#123;% note success %&#125;<br>文字 或者 <span class="hljs-code">`markdown`</span> 均可<br>&#123;% endnote %&#125;<br><br>&#123;% note success %&#125; 与 &#123;% endnote %&#125; 需单独成行<br></code></pre></td></tr></table></figure>
+
+<p>可选便签：</p>
+<div class="note note-primary">
+            <p>primary</p>
+          </div>
+
+<div class="note note-secondary">
+            <p>secondary</p>
+          </div>
+
+<div class="note note-success">
+            <p>success</p>
+          </div>
+
+<div class="note note-danger">
+            <p>danger</p>
+          </div>
+
+<div class="note note-warning">
+            <p>warning</p>
+          </div>
+
+<div class="note note-info">
+            <p>info</p>
+          </div>
+
+<div class="note note-light">
+            <p>light</p>
+          </div>
+
+
+
+<h4 id="行内标签"><a href="#行内标签" class="headerlink" title="行内标签"></a>行内标签</h4><figure class="highlight markdown"><table><tr><td class="code"><pre><code class="hljs markdown">&#123;% label primary @text %&#125;<br>text 为标签内容，且 text 不能以 @ 开头<br></code></pre></td></tr></table></figure>
+
+<p>可选 Label ：</p>
+<span class="label label-primary">primary</span> <span class="label label-default">default</span> <span class="label label-info">info</span> <span class="label label-success">success</span> <span class="label label-warning">warning</span> <span class="label label-danger">danger</span> 
+
+
+
+<h4 id="勾选框"><a href="#勾选框" class="headerlink" title="勾选框"></a>勾选框</h4><figure class="highlight markdown"><table><tr><td class="code"><pre><code class="hljs markdown">&#123;% cb text, checked?, incline? %&#125;<br><br>text : 显示的文字<br>checked : 默认是否已勾选，默认 false<br>incline : 是否内联，（可以理解为后面的文字是否换行），默认 false<br></code></pre></td></tr></table></figure>
+
+<div>
+            <input type="checkbox" disabled >普通示例
+          </div> <div>
+            <input type="checkbox" disabled checked="checked">默认选中
+          </div>
+
+
+
+<h4 id="按钮"><a href="#按钮" class="headerlink" title="按钮"></a>按钮</h4><figure class="highlight markdown"><table><tr><td class="code"><pre><code class="hljs markdown">&#123;% btn url, text, title %&#125;<br><br>url : 跳转链接<br>text : 显示的文字<br>title : 鼠标悬停时显示的文字（可选）<br></code></pre></td></tr></table></figure>
+
+<a class="btn" href="https://fluid-dev.github.io/"  title="Fluid官网" target="_blank">Fluid</a>
+
+
+
+<h4 id="组图"><a href="#组图" class="headerlink" title="组图"></a>组图</h4><figure class="highlight markdown"><table><tr><td class="code"><pre><code class="hljs markdown">&#123;% gi total n1-n2-... %&#125;<br>  ![](url)<br>  ![](url)<br>  ![](url)<br>  ![](url)<br>  ![](url)<br>&#123;% endgi %&#125;<br><br>total : 图片总数量，对应中间包含的图片 url 数量<br>n1-n2-... : 每行的图片数量，可以省略，默认单行最多 3 张图，求和必须相等于 total，否则按默认样式<br>例如 : &#123;% gi 5 3-2 %&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="使用-jsdelivr-amp-amp-GitHub-图床"><a href="#使用-jsdelivr-amp-amp-GitHub-图床" class="headerlink" title="使用 jsdelivr &amp;&amp; GitHub 图床"></a>使用 jsdelivr &amp;&amp; GitHub 图床</h2><p>jsdelivr 是一个免费的公用 CDN，可用于加速静态资源的访问速度</p>
+<p>使用方式：</p>
+<ol>
+<li><p>在 GitHub 创建一个公开仓库用于存放 GitHub Pages 的静态资源 (例如 jpg，png，js等文件)；<br>Gitee 也可以，但 Gitee 每次仅能上传 1M 以内的文件，这里采用 GitHub</p>
+</li>
+<li><p>拉取到本地，编辑图床文件目录结构，并使用 Git 管理图片文件；</p>
+</li>
+<li><p>上传到 GitHub，使用 jsDeliver 进行访问，并将该链接作为 <code>Markdown</code> 中图片的 <code>URL</code>；</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">https:<span class="hljs-regexp">//</span>cdn.jsdelivr.net<span class="hljs-regexp">/gh/</span>GitHub用户名/图床仓库<br></code></pre></td></tr></table></figure></li>
+<li><p>部署到 GitHub 上后，访问 GitHub Pages 时静态资源将 通过 jsDeliver 进行加速</p>
+</li>
+</ol>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>同时，Fluid 中内置 LaTeX 数学公式（或 hexo 5.0 以上使用官方插件 hexo-math），Mermaid 流程图等，但并不常用，所以不做演示，以后需要再记录。</p>
+<p><strong>建议</strong>：由于GitHub 上存储 GitHub Pages 时，仅存储每次 hexo 生成的静态资源，而全部的 <code>Markdown</code> 文件仍存放在本地，因此建议将 hexo 的 blog 文件夹也上传为一个私有的 GitHub 或 Gitee 仓库，并定期上传更改。保证即使本地文件损坏，也能快速恢复。（别问我为什么这么熟练 o(╥﹏╥)o）</p>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><p>Fluid 官方文档 ： <a href="https://fluid-dev.github.io/hexo-fluid-docs/guide/">https://fluid-dev.github.io/hexo-fluid-docs/guide/</a></p>
+<p>Hexo 官方文档：<a href="https://hexo.io/zh-cn/docs/">https://hexo.io/zh-cn/docs/</a></p>
+]]></content>
+      <categories>
+        <category>others</category>
+      </categories>
+      <tags>
+        <tag>Tools</tag>
+      </tags>
+  </entry>
 </search>
