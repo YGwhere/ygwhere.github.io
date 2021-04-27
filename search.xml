@@ -189,129 +189,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Git 使用指导</title>
-    <url>/2021/03/11/tools/gitStudy/</url>
-    <content><![CDATA[<p>什么是 **<a href="https://git-scm.com/">Git</a> **? </p>
-<blockquote>
-<p>Git — The stupid content tracker, 傻瓜内容跟踪器。</p>
-<p>一个开源的分布式版本控制系统，可以有效、高速地处理从很小到非常大的项目版本管理。</p>
-</blockquote>
-<h1 id="Git-工作流程"><a href="#Git-工作流程" class="headerlink" title="Git 工作流程"></a>Git 工作流程</h1><figure class="highlight html"><table><tr><td class="code"><pre><code class="hljs html">                                  ┌────────────────┐<br>                              ┌───► git clone <span class="hljs-tag">&lt;<span class="hljs-name">URL</span>&gt;</span>│<br>                              │   └────────────────┘<br>   ┌────────────────────────┐ │<br>   │create a git repository ├─┤<br>   └───────────┬────────────┘ │<br>               │              │   ┌──────────────┐<br>               │              └───►   git init   │<br>               │update            └──────────────┘<br>               │delete<br>               │ add<br>               │<br>               │<br>┌──────────────▼────────────────────┐     ┌───────────────────┐<br>│ update the file of the repository ├──┬──► git add <span class="hljs-tag">&lt;<span class="hljs-name">filename</span>&gt;</span>│<br>└──────────────┬────────────────────┘  │  └───────────────────┘<br>               │                       │<br>               │                       │  ┌───────────────────┐<br>               │                       ├──►    git status     │<br>               │                       │  └───────────────────┘<br>               │                       │<br> ┌─────────────▼──────────────┐        │  ┌─────────────────────────┐<br> │ commit the update to stage ├────────┴──► git commit -m <span class="hljs-tag">&lt;<span class="hljs-name">message</span>&gt;</span> │<br> └─────────────┬──────────────┘           └─────────────────────────┘<br>               │<br>               │<br>               │<br>┌──────────────▼────────────────┐           ┌──────────┐<br>│ push the commit to repository ├───────────► git push │<br>└───────────────────────────────┘           └──────────┘<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/tools/gitStudy/1.jpg"></p>
-<h1 id="配置-Git"><a href="#配置-Git" class="headerlink" title="配置 Git"></a>配置 Git</h1><p>使用命令 <code>git config</code> 来设置 Git 相关配置</p>
-<h2 id="配置用户信息"><a href="#配置用户信息" class="headerlink" title="配置用户信息"></a>配置用户信息</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 在特定项目中使用用户信息，新设定将保存在当前项目的 .git/config 中</span><br>$ git config user.name <span class="hljs-string">&quot;ygwhere&quot;</span>			<span class="hljs-comment"># 配置个人用户名称</span><br>$ git config user.email ygwhere@gmail.com	<span class="hljs-comment"># 配置个人电子邮件地址</span><br><span class="hljs-comment"># --global 参数 : 将更改用户主目录下配置文件 .gitconfig，项目未指定情况下降使用全局设置</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="修改文本编辑器"><a href="#修改文本编辑器" class="headerlink" title="修改文本编辑器"></a>修改文本编辑器</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># Git 默认使用文本编辑器为 Vi 或 Vim，可设置为其他项目</span><br>$ git config --global core.editor <span class="hljs-string">&quot;\&quot;‪D:/common/Notepad++/notepad++.exe\&quot;&quot;</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="查看配置信息"><a href="#查看配置信息" class="headerlink" title="查看配置信息"></a>查看配置信息</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git config --list<br></code></pre></td></tr></table></figure>
-
-
-
-<p>以上的全部修改都可以在 <code>~/.gitconfig</code> 或 <code>/etc/gitconfig</code> 中查看或修改</p>
-<figure class="highlight ini"><table><tr><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[user]</span><br>	<span class="hljs-attr">name</span> = YGwhere<br>	<span class="hljs-attr">email</span> = ygwhere@gmail.com<br><span class="hljs-section">[core]</span><br>	<span class="hljs-attr">editor</span> = <span class="hljs-string">&quot;\&quot;‪D:/common/Notepad++/notepad++.exe\&quot;&quot;</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h1 id="创建版本库"><a href="#创建版本库" class="headerlink" title="创建版本库"></a>创建版本库</h1><h2 id="git-init"><a href="#git-init" class="headerlink" title="git init"></a><code>git init</code></h2><p>用于初始化一个版本库</p>
-<p>使用：选择合适文件夹 (路径名尽量不包含中文)，在目录下的命令行中运行该命令，Git 将自动将该文件夹作为仓库，并创建一个名为 <code>.git</code> 的隐藏文件夹，其中包含 Git 版本库中的配置文件。</p>
-<h2 id="git-clone-lt-URL-gt"><a href="#git-clone-lt-URL-gt" class="headerlink" title="git clone &lt;URL&gt;"></a><code>git clone &lt;URL&gt;</code></h2><p>从远程仓库 (Github, Gitee等) 中克隆仓库，默认克隆仓库位置位于当前目录下。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git <span class="hljs-built_in">clone</span> &lt;url&gt; [name]<br><span class="hljs-comment"># 可指定拷贝的 git 项目在本地的项目名为 name</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h1 id="管理修改"><a href="#管理修改" class="headerlink" title="管理修改"></a>管理修改</h1><h2 id="git-status"><a href="#git-status" class="headerlink" title="git status"></a><code>git status</code></h2><p>查看仓库中文件状态，包括仓库中文件的增删改状态，并提示将相关文件添加到暂存区或提交到版本库。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git status -s<br><span class="hljs-comment"># -s 参数 : 获得简短的输出</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="git-diff-lt-filename-gt"><a href="#git-diff-lt-filename-gt" class="headerlink" title="git diff &lt;filename&gt;"></a><code>git diff &lt;filename&gt;</code></h2><p>查看工作区中文件与版本库中文件差异。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git diff &lt;filename&gt;<br><span class="hljs-comment"># 显示暂存区和工作区的差异</span><br><br>$ git diff --cached [file] <span class="hljs-comment"># == --staged</span><br><span class="hljs-comment"># 显示暂存区和上一次提交的差异</span><br><br>$ git diff [first-branch]...[second-branch]<br><span class="hljs-comment"># 显示两次提交之间的差异</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="git-add-lt-filename-gt"><a href="#git-add-lt-filename-gt" class="headerlink" title="git add &lt;filename&gt;"></a><code>git add &lt;filename&gt;</code></h2><p>将工作区中文件的修改添加到暂存区。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git add [file1] [file2] ...<br><span class="hljs-comment"># 添加多个文件</span><br><br>$ git add [dir]<br><span class="hljs-comment"># 添加指定目录到暂存区，包括子目录</span><br><br>$ git add .<br><span class="hljs-comment"># 添加当前目录的所有文件夹到暂存区</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="git-commit"><a href="#git-commit" class="headerlink" title="git commit "></a><code>git commit </code></h2><p>提交暂存区到本地仓库</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git commit -m [message]<br><br><span class="hljs-comment"># -m 参数 : 为此次提交添加备注信息，一般建议添加</span><br><span class="hljs-comment"># -a 参数 : 设置修改文件后不需要执行 git add 命令，直接提交</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="git-reset"><a href="#git-reset" class="headerlink" title="git reset"></a><code>git reset</code></h2><p>回退版本</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git reset [--soft | --mixed | --hard] [HEAD]<br><span class="hljs-comment"># --mixed 参数 : 默认可为空，用于重置暂存区的文件与上一次的提交保持一致，工作区文件内容保持不变</span><br><span class="hljs-comment"># -soft 参数 : 用于回退到某个版本</span><br><span class="hljs-comment"># --hard 参数 : 撤销工作区中所有未提交的修改内容，将暂存区与工作区都回到上一次版本，并删除之前的所有信息提交</span><br><br><span class="hljs-comment"># HEAD 说明 : </span><br><span class="hljs-comment">#	HEAD -&gt; 当前版本  HEAD^ -&gt; 上个版本		HEAD^^ -&gt; 上上个版本 ...</span><br><span class="hljs-comment">#	HEAD~0 -&gt; 当前版本	HEAD~1 -&gt; 上个版本	HEAD^2 -&gt; 上上个版本 ...</span><br><br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="git-rm"><a href="#git-rm" class="headerlink" title="git rm"></a><code>git rm</code></h2><p>删除工作区文件</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git rm &lt;file&gt;<br><span class="hljs-comment"># 将文件从暂存区和工作区中删除</span><br><span class="hljs-comment"># -f 参数 : 删除之前修改过并已经放入暂存区中的文件</span><br><br>$ git rm --cached &lt;file&gt;<br><span class="hljs-comment"># 将文件从暂存区中移除，但保留工作区中文件</span><br><br><span class="hljs-comment"># &lt;file&gt; 同样可以为 &lt;dir&gt; 文件目录，当问目录时将同时删除其子目录</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="git-mv"><a href="#git-mv" class="headerlink" title="git mv"></a><code>git mv</code></h2><p>移动或重命名工作区文件</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git mv [file][newfile]<br><span class="hljs-comment"># -f 参数 : 强制重命名文件，即使文件名已存在</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h1 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h1><h2 id="git-log"><a href="#git-log" class="headerlink" title="git log"></a><code>git log</code></h2><p>查看项目的提交历史</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git <span class="hljs-built_in">log</span><br><br><span class="hljs-comment"># --oneline : 查看历史记录的简洁版本</span><br><span class="hljs-comment"># --graph : 将历史中的分支与合并用拓扑图的形式表现出来</span><br><span class="hljs-comment"># --reverse : 逆向显示全部日志</span><br><span class="hljs-comment"># --author : 查找指定用户的提交日志，--author=ygwhere</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="git-blame"><a href="#git-blame" class="headerlink" title="git blame"></a><code>git blame</code></h2><p>查看指定文件的修改记录</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git blame &lt;filename&gt;<br><span class="hljs-comment"># 以列表形式显示修改记录</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h1 id="远程操作"><a href="#远程操作" class="headerlink" title="远程操作"></a>远程操作</h1><h2 id="git-remote"><a href="#git-remote" class="headerlink" title="git remote"></a><code>git remote</code></h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git remote -v<br><span class="hljs-comment"># 显示所有远程仓库</span><br>origin  https://github.com/YGwhere/BlogSrcBak.git (fetch)<br>origin  https://github.com/YGwhere/BlogSrcBak.git (push)<br><span class="hljs-comment"># origin 为远程地址别名</span><br><br>$ git remote show [remote]<br><span class="hljs-comment"># 显示某个远程仓库的信息</span><br><br>$ git remote add [shortname] [url]<br><span class="hljs-comment"># 添加远程版本库</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="git-fetch"><a href="#git-fetch" class="headerlink" title="git fetch"></a><code>git fetch</code></h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git merge<br><span class="hljs-comment"># 从远程仓库提取数据并尝试合并到当前分支</span><br><br>$ git merge [<span class="hljs-built_in">alias</span>]/[branch]  <span class="hljs-comment"># git merge origin/master</span><br><span class="hljs-comment"># 将服务器上任何更新合并到当前分支</span><br><br>$ git fetch [<span class="hljs-built_in">alias</span>]		<span class="hljs-comment"># git fetch origin</span><br><span class="hljs-comment"># 从远程仓库获取远程仓库中有而本地没有的数据</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="git-pull"><a href="#git-pull" class="headerlink" title="git pull"></a><code>git pull</code></h2><p>从远程获取代码并合并本地的版本</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git pull &lt;remote host&gt;&lt;remote branch&gt;:&lt;<span class="hljs-built_in">local</span> branch&gt;   <span class="hljs-comment"># 拉取到当前分支，本地分支名可省</span><br><span class="hljs-comment"># == git fetch + git merge FETCH_HEAD</span><br><br><span class="hljs-comment"># 将远程主机 origin 中的 main 分支拉取到本地的branchtest</span><br><span class="hljs-comment"># git pull origin main:brantest</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="git-push"><a href="#git-push" class="headerlink" title="git push"></a><code>git push</code></h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git push &lt;remote host&gt;&lt;remote branch&gt;:&lt;<span class="hljs-built_in">local</span> branch&gt;   <span class="hljs-comment"># 拉取到当前分支，本地分支名可省</span><br><span class="hljs-comment"># git push origin main:main</span><br><br><span class="hljs-comment"># 当本地版本与远程版本有差异，可以使用 --force 参数强制推送</span><br></code></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>others</category>
-      </categories>
-      <tags>
-        <tag>Tools</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据链路层概述</title>
-    <url>/2021/04/21/network/DataLink/</url>
-    <content><![CDATA[<blockquote>
-<p>数据链路层是OSI参考模型的第二层，其最基本的服务是将源自物理层来的数据可靠地传输到相邻节点的目标机网络层。</p>
-</blockquote>
-<h1 id="一、数据链路层的任务"><a href="#一、数据链路层的任务" class="headerlink" title="一、数据链路层的任务"></a>一、数据链路层的任务</h1><p>数据链路层主要有两个功能 ：帧编码和误差纠正控制</p>
-<h2 id="1-1-数据链路层的相关概念"><a href="#1-1-数据链路层的相关概念" class="headerlink" title="1.1 数据链路层的相关概念"></a>1.1 数据链路层的相关概念</h2><p><strong>节点</strong>：运行链路层协议的任何设备；</p>
-<p><strong>链路</strong>：沿通信路径连接相邻节点的物理线路；</p>
-<p><strong>帧</strong>：数据链路层协议数据单元，帧的结构由链路层协议规定，一个帧由一个数据字段（封装了网络层数据报）和若干首部字段组成；</p>
-<p><strong>网络适配器</strong>（网络接口卡NIC）：链路层的主体实现部分，核心是链路层控制器，一般包含了数据链路层和物理层两层的功能。</p>
-<h2 id="1-2-三个基本问题"><a href="#1-2-三个基本问题" class="headerlink" title="1.2 三个基本问题"></a>1.2 三个基本问题</h2><h3 id="1-2-1-封装成帧"><a href="#1-2-1-封装成帧" class="headerlink" title="1.2.1 封装成帧"></a>1.2.1 封装成帧</h3><p>指在一段数据（IP数据报）的前后添加首部和尾部，构成一个帧，从而进行<strong>帧定界</strong>；当数据是ASCLL码组成的文本文件时，可以使用特殊帧定界符（SOH - 0x01 作为帧开始符，EOT - 0x04 作为帧结束符）。同时，所有的数据链路层协议都定义了数据部分长度上限即<strong>最大传输单元 MTU</strong>，即IP数据报的长度不能超过MTU。以太网的MTU一般为1500字节，所以IP数据报的总长度不能超过1500字节。</p>
-<h3 id="1-2-2-透明传输"><a href="#1-2-2-透明传输" class="headerlink" title="1.2.2 透明传输"></a>1.2.2 透明传输</h3><p>使数据字段中的某个字节的二进制代码与控制字符SOH或EOT混淆，即将数据字段看作透明不存在一般。采取的方法一般是字节填充或字符填充：发送端的数据链路层在数据字段中的SOH或EOT字段前添加一个转义字符ESC(0x1B)，当转义字符也存在于数据字段中，同样在其前面添加一个转义字符，而接收端的数据链路层在将数据传输到网络层前删除数据字段中的转义字符。</p>
-<h3 id="1-2-3-差错检测"><a href="#1-2-3-差错检测" class="headerlink" title="1.2.3 差错检测"></a>1.2.3 差错检测</h3><h1 id="二、使用点对点信道的数据链路层"><a href="#二、使用点对点信道的数据链路层" class="headerlink" title="二、使用点对点信道的数据链路层"></a>二、使用点对点信道的数据链路层</h1><h2 id="2-1-应用：点对点协议PPP"><a href="#2-1-应用：点对点协议PPP" class="headerlink" title="2.1 应用：点对点协议PPP"></a>2.1 应用：点对点协议PPP</h2><h1 id="三、使用广播信道的数据链路层"><a href="#三、使用广播信道的数据链路层" class="headerlink" title="三、使用广播信道的数据链路层"></a>三、使用广播信道的数据链路层</h1><h2 id="3-1-多路访问链路和协议"><a href="#3-1-多路访问链路和协议" class="headerlink" title="3.1 多路访问链路和协议"></a>3.1 多路访问链路和协议</h2><h3 id="3-1-1-信道划分协议"><a href="#3-1-1-信道划分协议" class="headerlink" title="3.1.1 信道划分协议"></a>3.1.1 信道划分协议</h3><h3 id="3-1-2-随机接入协议"><a href="#3-1-2-随机接入协议" class="headerlink" title="3.1.2 随机接入协议"></a>3.1.2 随机接入协议</h3><h3 id="3-1-3-轮流协议"><a href="#3-1-3-轮流协议" class="headerlink" title="3.1.3 轮流协议"></a>3.1.3 轮流协议</h3><h1 id="四、交换局域网"><a href="#四、交换局域网" class="headerlink" title="四、交换局域网"></a>四、交换局域网</h1><h2 id="4-1-广播信道的应用：局域网"><a href="#4-1-广播信道的应用：局域网" class="headerlink" title="4.1 广播信道的应用：局域网"></a>4.1 广播信道的应用：局域网</h2><h2 id="4-2-以太网"><a href="#4-2-以太网" class="headerlink" title="4.2 以太网"></a>4.2 以太网</h2><h2 id="4-3-扩展的以太网"><a href="#4-3-扩展的以太网" class="headerlink" title="4.3 扩展的以太网"></a>4.3 扩展的以太网</h2><h1 id="五、数据链路层设备"><a href="#五、数据链路层设备" class="headerlink" title="五、数据链路层设备"></a>五、数据链路层设备</h1><h2 id="5-1-网卡"><a href="#5-1-网卡" class="headerlink" title="5.1 网卡"></a>5.1 网卡</h2><h2 id="5-2-网桥"><a href="#5-2-网桥" class="headerlink" title="5.2 网桥"></a>5.2 网桥</h2><h2 id="5-3-链路层交换机"><a href="#5-3-链路层交换机" class="headerlink" title="5.3 链路层交换机"></a>5.3 链路层交换机</h2>]]></content>
-      <categories>
-        <category>Computer Network</category>
-        <category>Data Link Layer</category>
-      </categories>
-  </entry>
-  <entry>
     <title>物理层概述</title>
     <url>/2021/04/19/network/Frame/</url>
     <content><![CDATA[<blockquote>
@@ -402,6 +279,25 @@
       <categories>
         <category>Computer Network</category>
         <category>Physical Layer</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>数据链路层概述</title>
+    <url>/2021/04/21/network/DataLink/</url>
+    <content><![CDATA[<blockquote>
+<p>数据链路层是OSI参考模型的第二层，其最基本的服务是将源自物理层来的数据可靠地传输到相邻节点的目标机网络层。</p>
+</blockquote>
+<h1 id="一、数据链路层的任务"><a href="#一、数据链路层的任务" class="headerlink" title="一、数据链路层的任务"></a>一、数据链路层的任务</h1><p>数据链路层主要有两个功能 ：帧编码和误差纠正控制</p>
+<h2 id="1-1-数据链路层的相关概念"><a href="#1-1-数据链路层的相关概念" class="headerlink" title="1.1 数据链路层的相关概念"></a>1.1 数据链路层的相关概念</h2><p><strong>节点</strong>：运行链路层协议的任何设备；</p>
+<p><strong>链路</strong>：沿通信路径连接相邻节点的物理线路；</p>
+<p><strong>帧</strong>：数据链路层协议数据单元，帧的结构由链路层协议规定，一个帧由一个数据字段（封装了网络层数据报）和若干首部字段组成；</p>
+<p><strong>网络适配器</strong>（网络接口卡NIC）：链路层的主体实现部分，核心是链路层控制器，一般包含了数据链路层和物理层两层的功能。</p>
+<h2 id="1-2-三个基本问题"><a href="#1-2-三个基本问题" class="headerlink" title="1.2 三个基本问题"></a>1.2 三个基本问题</h2><h3 id="1-2-1-封装成帧"><a href="#1-2-1-封装成帧" class="headerlink" title="1.2.1 封装成帧"></a>1.2.1 封装成帧</h3><p>指在一段数据（IP数据报）的前后添加首部和尾部，构成一个帧，从而进行<strong>帧定界</strong>；当数据是ASCLL码组成的文本文件时，可以使用特殊帧定界符（SOH - 0x01 作为帧开始符，EOT - 0x04 作为帧结束符）。同时，所有的数据链路层协议都定义了数据部分长度上限即<strong>最大传输单元 MTU</strong>，即IP数据报的长度不能超过MTU。以太网的MTU一般为1500字节，所以IP数据报的总长度不能超过1500字节。</p>
+<h3 id="1-2-2-透明传输"><a href="#1-2-2-透明传输" class="headerlink" title="1.2.2 透明传输"></a>1.2.2 透明传输</h3><p>使数据字段中的某个字节的二进制代码与控制字符SOH或EOT混淆，即将数据字段看作透明不存在一般。采取的方法一般是字节填充或字符填充：发送端的数据链路层在数据字段中的SOH或EOT字段前添加一个转义字符ESC(0x1B)，当转义字符也存在于数据字段中，同样在其前面添加一个转义字符，而接收端的数据链路层在将数据传输到网络层前删除数据字段中的转义字符。</p>
+<h3 id="1-2-3-差错检测"><a href="#1-2-3-差错检测" class="headerlink" title="1.2.3 差错检测"></a>1.2.3 差错检测</h3><h1 id="二、使用点对点信道的数据链路层"><a href="#二、使用点对点信道的数据链路层" class="headerlink" title="二、使用点对点信道的数据链路层"></a>二、使用点对点信道的数据链路层</h1><h2 id="2-1-应用：点对点协议PPP"><a href="#2-1-应用：点对点协议PPP" class="headerlink" title="2.1 应用：点对点协议PPP"></a>2.1 应用：点对点协议PPP</h2><h1 id="三、使用广播信道的数据链路层"><a href="#三、使用广播信道的数据链路层" class="headerlink" title="三、使用广播信道的数据链路层"></a>三、使用广播信道的数据链路层</h1><h2 id="3-1-多路访问链路和协议"><a href="#3-1-多路访问链路和协议" class="headerlink" title="3.1 多路访问链路和协议"></a>3.1 多路访问链路和协议</h2><h3 id="3-1-1-信道划分协议"><a href="#3-1-1-信道划分协议" class="headerlink" title="3.1.1 信道划分协议"></a>3.1.1 信道划分协议</h3><h3 id="3-1-2-随机接入协议"><a href="#3-1-2-随机接入协议" class="headerlink" title="3.1.2 随机接入协议"></a>3.1.2 随机接入协议</h3><h3 id="3-1-3-轮流协议"><a href="#3-1-3-轮流协议" class="headerlink" title="3.1.3 轮流协议"></a>3.1.3 轮流协议</h3><h1 id="四、交换局域网"><a href="#四、交换局域网" class="headerlink" title="四、交换局域网"></a>四、交换局域网</h1><h2 id="4-1-广播信道的应用：局域网"><a href="#4-1-广播信道的应用：局域网" class="headerlink" title="4.1 广播信道的应用：局域网"></a>4.1 广播信道的应用：局域网</h2><h2 id="4-2-以太网"><a href="#4-2-以太网" class="headerlink" title="4.2 以太网"></a>4.2 以太网</h2><h2 id="4-3-扩展的以太网"><a href="#4-3-扩展的以太网" class="headerlink" title="4.3 扩展的以太网"></a>4.3 扩展的以太网</h2><h1 id="五、数据链路层设备"><a href="#五、数据链路层设备" class="headerlink" title="五、数据链路层设备"></a>五、数据链路层设备</h1><h2 id="5-1-网卡"><a href="#5-1-网卡" class="headerlink" title="5.1 网卡"></a>5.1 网卡</h2><h2 id="5-2-网桥"><a href="#5-2-网桥" class="headerlink" title="5.2 网桥"></a>5.2 网桥</h2><h2 id="5-3-链路层交换机"><a href="#5-3-链路层交换机" class="headerlink" title="5.3 链路层交换机"></a>5.3 链路层交换机</h2>]]></content>
+      <categories>
+        <category>Computer Network</category>
+        <category>Data Link Layer</category>
       </categories>
   </entry>
   <entry>
@@ -507,6 +403,110 @@
       </categories>
       <tags>
         <tag>TCP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Git 使用指导</title>
+    <url>/2021/03/11/tools/gitStudy/</url>
+    <content><![CDATA[<p>什么是 **<a href="https://git-scm.com/">Git</a> **? </p>
+<blockquote>
+<p>Git — The stupid content tracker, 傻瓜内容跟踪器。</p>
+<p>一个开源的分布式版本控制系统，可以有效、高速地处理从很小到非常大的项目版本管理。</p>
+</blockquote>
+<h1 id="Git-工作流程"><a href="#Git-工作流程" class="headerlink" title="Git 工作流程"></a>Git 工作流程</h1><figure class="highlight html"><table><tr><td class="code"><pre><code class="hljs html">                                  ┌────────────────┐<br>                              ┌───► git clone <span class="hljs-tag">&lt;<span class="hljs-name">URL</span>&gt;</span>│<br>                              │   └────────────────┘<br>   ┌────────────────────────┐ │<br>   │create a git repository ├─┤<br>   └───────────┬────────────┘ │<br>               │              │   ┌──────────────┐<br>               │              └───►   git init   │<br>               │update            └──────────────┘<br>               │delete<br>               │ add<br>               │<br>               │<br>┌──────────────▼────────────────────┐     ┌───────────────────┐<br>│ update the file of the repository ├──┬──► git add <span class="hljs-tag">&lt;<span class="hljs-name">filename</span>&gt;</span>│<br>└──────────────┬────────────────────┘  │  └───────────────────┘<br>               │                       │<br>               │                       │  ┌───────────────────┐<br>               │                       ├──►    git status     │<br>               │                       │  └───────────────────┘<br>               │                       │<br> ┌─────────────▼──────────────┐        │  ┌─────────────────────────┐<br> │ commit the update to stage ├────────┴──► git commit -m <span class="hljs-tag">&lt;<span class="hljs-name">message</span>&gt;</span> │<br> └─────────────┬──────────────┘           └─────────────────────────┘<br>               │<br>               │<br>               │<br>┌──────────────▼────────────────┐           ┌──────────┐<br>│ push the commit to repository ├───────────► git push │<br>└───────────────────────────────┘           └──────────┘<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/tools/gitStudy/1.jpg"></p>
+<h1 id="配置-Git"><a href="#配置-Git" class="headerlink" title="配置 Git"></a>配置 Git</h1><p>使用命令 <code>git config</code> 来设置 Git 相关配置</p>
+<h2 id="配置用户信息"><a href="#配置用户信息" class="headerlink" title="配置用户信息"></a>配置用户信息</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 在特定项目中使用用户信息，新设定将保存在当前项目的 .git/config 中</span><br>$ git config user.name <span class="hljs-string">&quot;ygwhere&quot;</span>			<span class="hljs-comment"># 配置个人用户名称</span><br>$ git config user.email ygwhere@gmail.com	<span class="hljs-comment"># 配置个人电子邮件地址</span><br><span class="hljs-comment"># --global 参数 : 将更改用户主目录下配置文件 .gitconfig，项目未指定情况下降使用全局设置</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="修改文本编辑器"><a href="#修改文本编辑器" class="headerlink" title="修改文本编辑器"></a>修改文本编辑器</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># Git 默认使用文本编辑器为 Vi 或 Vim，可设置为其他项目</span><br>$ git config --global core.editor <span class="hljs-string">&quot;\&quot;‪D:/common/Notepad++/notepad++.exe\&quot;&quot;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="查看配置信息"><a href="#查看配置信息" class="headerlink" title="查看配置信息"></a>查看配置信息</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git config --list<br></code></pre></td></tr></table></figure>
+
+
+
+<p>以上的全部修改都可以在 <code>~/.gitconfig</code> 或 <code>/etc/gitconfig</code> 中查看或修改</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[user]</span><br>	<span class="hljs-attr">name</span> = YGwhere<br>	<span class="hljs-attr">email</span> = ygwhere@gmail.com<br><span class="hljs-section">[core]</span><br>	<span class="hljs-attr">editor</span> = <span class="hljs-string">&quot;\&quot;‪D:/common/Notepad++/notepad++.exe\&quot;&quot;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="创建版本库"><a href="#创建版本库" class="headerlink" title="创建版本库"></a>创建版本库</h1><h2 id="git-init"><a href="#git-init" class="headerlink" title="git init"></a><code>git init</code></h2><p>用于初始化一个版本库</p>
+<p>使用：选择合适文件夹 (路径名尽量不包含中文)，在目录下的命令行中运行该命令，Git 将自动将该文件夹作为仓库，并创建一个名为 <code>.git</code> 的隐藏文件夹，其中包含 Git 版本库中的配置文件。</p>
+<h2 id="git-clone-lt-URL-gt"><a href="#git-clone-lt-URL-gt" class="headerlink" title="git clone &lt;URL&gt;"></a><code>git clone &lt;URL&gt;</code></h2><p>从远程仓库 (Github, Gitee等) 中克隆仓库，默认克隆仓库位置位于当前目录下。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git <span class="hljs-built_in">clone</span> &lt;url&gt; [name]<br><span class="hljs-comment"># 可指定拷贝的 git 项目在本地的项目名为 name</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="管理修改"><a href="#管理修改" class="headerlink" title="管理修改"></a>管理修改</h1><h2 id="git-status"><a href="#git-status" class="headerlink" title="git status"></a><code>git status</code></h2><p>查看仓库中文件状态，包括仓库中文件的增删改状态，并提示将相关文件添加到暂存区或提交到版本库。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git status -s<br><span class="hljs-comment"># -s 参数 : 获得简短的输出</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="git-diff-lt-filename-gt"><a href="#git-diff-lt-filename-gt" class="headerlink" title="git diff &lt;filename&gt;"></a><code>git diff &lt;filename&gt;</code></h2><p>查看工作区中文件与版本库中文件差异。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git diff &lt;filename&gt;<br><span class="hljs-comment"># 显示暂存区和工作区的差异</span><br><br>$ git diff --cached [file] <span class="hljs-comment"># == --staged</span><br><span class="hljs-comment"># 显示暂存区和上一次提交的差异</span><br><br>$ git diff [first-branch]...[second-branch]<br><span class="hljs-comment"># 显示两次提交之间的差异</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="git-add-lt-filename-gt"><a href="#git-add-lt-filename-gt" class="headerlink" title="git add &lt;filename&gt;"></a><code>git add &lt;filename&gt;</code></h2><p>将工作区中文件的修改添加到暂存区。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git add [file1] [file2] ...<br><span class="hljs-comment"># 添加多个文件</span><br><br>$ git add [dir]<br><span class="hljs-comment"># 添加指定目录到暂存区，包括子目录</span><br><br>$ git add .<br><span class="hljs-comment"># 添加当前目录的所有文件夹到暂存区</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="git-commit"><a href="#git-commit" class="headerlink" title="git commit "></a><code>git commit </code></h2><p>提交暂存区到本地仓库</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git commit -m [message]<br><br><span class="hljs-comment"># -m 参数 : 为此次提交添加备注信息，一般建议添加</span><br><span class="hljs-comment"># -a 参数 : 设置修改文件后不需要执行 git add 命令，直接提交</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="git-reset"><a href="#git-reset" class="headerlink" title="git reset"></a><code>git reset</code></h2><p>回退版本</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git reset [--soft | --mixed | --hard] [HEAD]<br><span class="hljs-comment"># --mixed 参数 : 默认可为空，用于重置暂存区的文件与上一次的提交保持一致，工作区文件内容保持不变</span><br><span class="hljs-comment"># -soft 参数 : 用于回退到某个版本</span><br><span class="hljs-comment"># --hard 参数 : 撤销工作区中所有未提交的修改内容，将暂存区与工作区都回到上一次版本，并删除之前的所有信息提交</span><br><br><span class="hljs-comment"># HEAD 说明 : </span><br><span class="hljs-comment">#	HEAD -&gt; 当前版本  HEAD^ -&gt; 上个版本		HEAD^^ -&gt; 上上个版本 ...</span><br><span class="hljs-comment">#	HEAD~0 -&gt; 当前版本	HEAD~1 -&gt; 上个版本	HEAD^2 -&gt; 上上个版本 ...</span><br><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="git-rm"><a href="#git-rm" class="headerlink" title="git rm"></a><code>git rm</code></h2><p>删除工作区文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git rm &lt;file&gt;<br><span class="hljs-comment"># 将文件从暂存区和工作区中删除</span><br><span class="hljs-comment"># -f 参数 : 删除之前修改过并已经放入暂存区中的文件</span><br><br>$ git rm --cached &lt;file&gt;<br><span class="hljs-comment"># 将文件从暂存区中移除，但保留工作区中文件</span><br><br><span class="hljs-comment"># &lt;file&gt; 同样可以为 &lt;dir&gt; 文件目录，当问目录时将同时删除其子目录</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="git-mv"><a href="#git-mv" class="headerlink" title="git mv"></a><code>git mv</code></h2><p>移动或重命名工作区文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git mv [file][newfile]<br><span class="hljs-comment"># -f 参数 : 强制重命名文件，即使文件名已存在</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h1><h2 id="git-log"><a href="#git-log" class="headerlink" title="git log"></a><code>git log</code></h2><p>查看项目的提交历史</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git <span class="hljs-built_in">log</span><br><br><span class="hljs-comment"># --oneline : 查看历史记录的简洁版本</span><br><span class="hljs-comment"># --graph : 将历史中的分支与合并用拓扑图的形式表现出来</span><br><span class="hljs-comment"># --reverse : 逆向显示全部日志</span><br><span class="hljs-comment"># --author : 查找指定用户的提交日志，--author=ygwhere</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="git-blame"><a href="#git-blame" class="headerlink" title="git blame"></a><code>git blame</code></h2><p>查看指定文件的修改记录</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git blame &lt;filename&gt;<br><span class="hljs-comment"># 以列表形式显示修改记录</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="远程操作"><a href="#远程操作" class="headerlink" title="远程操作"></a>远程操作</h1><h2 id="git-remote"><a href="#git-remote" class="headerlink" title="git remote"></a><code>git remote</code></h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git remote -v<br><span class="hljs-comment"># 显示所有远程仓库</span><br>origin  https://github.com/YGwhere/BlogSrcBak.git (fetch)<br>origin  https://github.com/YGwhere/BlogSrcBak.git (push)<br><span class="hljs-comment"># origin 为远程地址别名</span><br><br>$ git remote show [remote]<br><span class="hljs-comment"># 显示某个远程仓库的信息</span><br><br>$ git remote add [shortname] [url]<br><span class="hljs-comment"># 添加远程版本库</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="git-fetch"><a href="#git-fetch" class="headerlink" title="git fetch"></a><code>git fetch</code></h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git merge<br><span class="hljs-comment"># 从远程仓库提取数据并尝试合并到当前分支</span><br><br>$ git merge [<span class="hljs-built_in">alias</span>]/[branch]  <span class="hljs-comment"># git merge origin/master</span><br><span class="hljs-comment"># 将服务器上任何更新合并到当前分支</span><br><br>$ git fetch [<span class="hljs-built_in">alias</span>]		<span class="hljs-comment"># git fetch origin</span><br><span class="hljs-comment"># 从远程仓库获取远程仓库中有而本地没有的数据</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="git-pull"><a href="#git-pull" class="headerlink" title="git pull"></a><code>git pull</code></h2><p>从远程获取代码并合并本地的版本</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git pull &lt;remote host&gt;&lt;remote branch&gt;:&lt;<span class="hljs-built_in">local</span> branch&gt;   <span class="hljs-comment"># 拉取到当前分支，本地分支名可省</span><br><span class="hljs-comment"># == git fetch + git merge FETCH_HEAD</span><br><br><span class="hljs-comment"># 将远程主机 origin 中的 main 分支拉取到本地的branchtest</span><br><span class="hljs-comment"># git pull origin main:brantest</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="git-push"><a href="#git-push" class="headerlink" title="git push"></a><code>git push</code></h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git push &lt;remote host&gt;&lt;remote branch&gt;:&lt;<span class="hljs-built_in">local</span> branch&gt;   <span class="hljs-comment"># 拉取到当前分支，本地分支名可省</span><br><span class="hljs-comment"># git push origin main:main</span><br><br><span class="hljs-comment"># 当本地版本与远程版本有差异，可以使用 --force 参数强制推送</span><br></code></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>others</category>
+      </categories>
+      <tags>
+        <tag>Tools</tag>
       </tags>
   </entry>
 </search>
