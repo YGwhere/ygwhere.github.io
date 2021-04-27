@@ -189,6 +189,110 @@
       </tags>
   </entry>
   <entry>
+    <title>Git 使用指导</title>
+    <url>/2021/03/11/tools/gitStudy/</url>
+    <content><![CDATA[<p>什么是 **<a href="https://git-scm.com/">Git</a> **? </p>
+<blockquote>
+<p>Git — The stupid content tracker, 傻瓜内容跟踪器。</p>
+<p>一个开源的分布式版本控制系统，可以有效、高速地处理从很小到非常大的项目版本管理。</p>
+</blockquote>
+<h1 id="Git-工作流程"><a href="#Git-工作流程" class="headerlink" title="Git 工作流程"></a>Git 工作流程</h1><figure class="highlight html"><table><tr><td class="code"><pre><code class="hljs html">                                  ┌────────────────┐<br>                              ┌───► git clone <span class="hljs-tag">&lt;<span class="hljs-name">URL</span>&gt;</span>│<br>                              │   └────────────────┘<br>   ┌────────────────────────┐ │<br>   │create a git repository ├─┤<br>   └───────────┬────────────┘ │<br>               │              │   ┌──────────────┐<br>               │              └───►   git init   │<br>               │update            └──────────────┘<br>               │delete<br>               │ add<br>               │<br>               │<br>┌──────────────▼────────────────────┐     ┌───────────────────┐<br>│ update the file of the repository ├──┬──► git add <span class="hljs-tag">&lt;<span class="hljs-name">filename</span>&gt;</span>│<br>└──────────────┬────────────────────┘  │  └───────────────────┘<br>               │                       │<br>               │                       │  ┌───────────────────┐<br>               │                       ├──►    git status     │<br>               │                       │  └───────────────────┘<br>               │                       │<br> ┌─────────────▼──────────────┐        │  ┌─────────────────────────┐<br> │ commit the update to stage ├────────┴──► git commit -m <span class="hljs-tag">&lt;<span class="hljs-name">message</span>&gt;</span> │<br> └─────────────┬──────────────┘           └─────────────────────────┘<br>               │<br>               │<br>               │<br>┌──────────────▼────────────────┐           ┌──────────┐<br>│ push the commit to repository ├───────────► git push │<br>└───────────────────────────────┘           └──────────┘<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/tools/gitStudy/1.jpg"></p>
+<h1 id="配置-Git"><a href="#配置-Git" class="headerlink" title="配置 Git"></a>配置 Git</h1><p>使用命令 <code>git config</code> 来设置 Git 相关配置</p>
+<h2 id="配置用户信息"><a href="#配置用户信息" class="headerlink" title="配置用户信息"></a>配置用户信息</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 在特定项目中使用用户信息，新设定将保存在当前项目的 .git/config 中</span><br>$ git config user.name <span class="hljs-string">&quot;ygwhere&quot;</span>			<span class="hljs-comment"># 配置个人用户名称</span><br>$ git config user.email ygwhere@gmail.com	<span class="hljs-comment"># 配置个人电子邮件地址</span><br><span class="hljs-comment"># --global 参数 : 将更改用户主目录下配置文件 .gitconfig，项目未指定情况下降使用全局设置</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="修改文本编辑器"><a href="#修改文本编辑器" class="headerlink" title="修改文本编辑器"></a>修改文本编辑器</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># Git 默认使用文本编辑器为 Vi 或 Vim，可设置为其他项目</span><br>$ git config --global core.editor <span class="hljs-string">&quot;\&quot;‪D:/common/Notepad++/notepad++.exe\&quot;&quot;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="查看配置信息"><a href="#查看配置信息" class="headerlink" title="查看配置信息"></a>查看配置信息</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git config --list<br></code></pre></td></tr></table></figure>
+
+
+
+<p>以上的全部修改都可以在 <code>~/.gitconfig</code> 或 <code>/etc/gitconfig</code> 中查看或修改</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[user]</span><br>	<span class="hljs-attr">name</span> = YGwhere<br>	<span class="hljs-attr">email</span> = ygwhere@gmail.com<br><span class="hljs-section">[core]</span><br>	<span class="hljs-attr">editor</span> = <span class="hljs-string">&quot;\&quot;‪D:/common/Notepad++/notepad++.exe\&quot;&quot;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="创建版本库"><a href="#创建版本库" class="headerlink" title="创建版本库"></a>创建版本库</h1><h2 id="git-init"><a href="#git-init" class="headerlink" title="git init"></a><code>git init</code></h2><p>用于初始化一个版本库</p>
+<p>使用：选择合适文件夹 (路径名尽量不包含中文)，在目录下的命令行中运行该命令，Git 将自动将该文件夹作为仓库，并创建一个名为 <code>.git</code> 的隐藏文件夹，其中包含 Git 版本库中的配置文件。</p>
+<h2 id="git-clone-lt-URL-gt"><a href="#git-clone-lt-URL-gt" class="headerlink" title="git clone &lt;URL&gt;"></a><code>git clone &lt;URL&gt;</code></h2><p>从远程仓库 (Github, Gitee等) 中克隆仓库，默认克隆仓库位置位于当前目录下。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git <span class="hljs-built_in">clone</span> &lt;url&gt; [name]<br><span class="hljs-comment"># 可指定拷贝的 git 项目在本地的项目名为 name</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="管理修改"><a href="#管理修改" class="headerlink" title="管理修改"></a>管理修改</h1><h2 id="git-status"><a href="#git-status" class="headerlink" title="git status"></a><code>git status</code></h2><p>查看仓库中文件状态，包括仓库中文件的增删改状态，并提示将相关文件添加到暂存区或提交到版本库。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git status -s<br><span class="hljs-comment"># -s 参数 : 获得简短的输出</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="git-diff-lt-filename-gt"><a href="#git-diff-lt-filename-gt" class="headerlink" title="git diff &lt;filename&gt;"></a><code>git diff &lt;filename&gt;</code></h2><p>查看工作区中文件与版本库中文件差异。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git diff &lt;filename&gt;<br><span class="hljs-comment"># 显示暂存区和工作区的差异</span><br><br>$ git diff --cached [file] <span class="hljs-comment"># == --staged</span><br><span class="hljs-comment"># 显示暂存区和上一次提交的差异</span><br><br>$ git diff [first-branch]...[second-branch]<br><span class="hljs-comment"># 显示两次提交之间的差异</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="git-add-lt-filename-gt"><a href="#git-add-lt-filename-gt" class="headerlink" title="git add &lt;filename&gt;"></a><code>git add &lt;filename&gt;</code></h2><p>将工作区中文件的修改添加到暂存区。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git add [file1] [file2] ...<br><span class="hljs-comment"># 添加多个文件</span><br><br>$ git add [dir]<br><span class="hljs-comment"># 添加指定目录到暂存区，包括子目录</span><br><br>$ git add .<br><span class="hljs-comment"># 添加当前目录的所有文件夹到暂存区</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="git-commit"><a href="#git-commit" class="headerlink" title="git commit "></a><code>git commit </code></h2><p>提交暂存区到本地仓库</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git commit -m [message]<br><br><span class="hljs-comment"># -m 参数 : 为此次提交添加备注信息，一般建议添加</span><br><span class="hljs-comment"># -a 参数 : 设置修改文件后不需要执行 git add 命令，直接提交</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="git-reset"><a href="#git-reset" class="headerlink" title="git reset"></a><code>git reset</code></h2><p>回退版本</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git reset [--soft | --mixed | --hard] [HEAD]<br><span class="hljs-comment"># --mixed 参数 : 默认可为空，用于重置暂存区的文件与上一次的提交保持一致，工作区文件内容保持不变</span><br><span class="hljs-comment"># -soft 参数 : 用于回退到某个版本</span><br><span class="hljs-comment"># --hard 参数 : 撤销工作区中所有未提交的修改内容，将暂存区与工作区都回到上一次版本，并删除之前的所有信息提交</span><br><br><span class="hljs-comment"># HEAD 说明 : </span><br><span class="hljs-comment">#	HEAD -&gt; 当前版本  HEAD^ -&gt; 上个版本		HEAD^^ -&gt; 上上个版本 ...</span><br><span class="hljs-comment">#	HEAD~0 -&gt; 当前版本	HEAD~1 -&gt; 上个版本	HEAD^2 -&gt; 上上个版本 ...</span><br><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="git-rm"><a href="#git-rm" class="headerlink" title="git rm"></a><code>git rm</code></h2><p>删除工作区文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git rm &lt;file&gt;<br><span class="hljs-comment"># 将文件从暂存区和工作区中删除</span><br><span class="hljs-comment"># -f 参数 : 删除之前修改过并已经放入暂存区中的文件</span><br><br>$ git rm --cached &lt;file&gt;<br><span class="hljs-comment"># 将文件从暂存区中移除，但保留工作区中文件</span><br><br><span class="hljs-comment"># &lt;file&gt; 同样可以为 &lt;dir&gt; 文件目录，当问目录时将同时删除其子目录</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="git-mv"><a href="#git-mv" class="headerlink" title="git mv"></a><code>git mv</code></h2><p>移动或重命名工作区文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git mv [file][newfile]<br><span class="hljs-comment"># -f 参数 : 强制重命名文件，即使文件名已存在</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h1><h2 id="git-log"><a href="#git-log" class="headerlink" title="git log"></a><code>git log</code></h2><p>查看项目的提交历史</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git <span class="hljs-built_in">log</span><br><br><span class="hljs-comment"># --oneline : 查看历史记录的简洁版本</span><br><span class="hljs-comment"># --graph : 将历史中的分支与合并用拓扑图的形式表现出来</span><br><span class="hljs-comment"># --reverse : 逆向显示全部日志</span><br><span class="hljs-comment"># --author : 查找指定用户的提交日志，--author=ygwhere</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="git-blame"><a href="#git-blame" class="headerlink" title="git blame"></a><code>git blame</code></h2><p>查看指定文件的修改记录</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git blame &lt;filename&gt;<br><span class="hljs-comment"># 以列表形式显示修改记录</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="远程操作"><a href="#远程操作" class="headerlink" title="远程操作"></a>远程操作</h1><h2 id="git-remote"><a href="#git-remote" class="headerlink" title="git remote"></a><code>git remote</code></h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git remote -v<br><span class="hljs-comment"># 显示所有远程仓库</span><br>origin  https://github.com/YGwhere/BlogSrcBak.git (fetch)<br>origin  https://github.com/YGwhere/BlogSrcBak.git (push)<br><span class="hljs-comment"># origin 为远程地址别名</span><br><br>$ git remote show [remote]<br><span class="hljs-comment"># 显示某个远程仓库的信息</span><br><br>$ git remote add [shortname] [url]<br><span class="hljs-comment"># 添加远程版本库</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="git-fetch"><a href="#git-fetch" class="headerlink" title="git fetch"></a><code>git fetch</code></h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git merge<br><span class="hljs-comment"># 从远程仓库提取数据并尝试合并到当前分支</span><br><br>$ git merge [<span class="hljs-built_in">alias</span>]/[branch]  <span class="hljs-comment"># git merge origin/master</span><br><span class="hljs-comment"># 将服务器上任何更新合并到当前分支</span><br><br>$ git fetch [<span class="hljs-built_in">alias</span>]		<span class="hljs-comment"># git fetch origin</span><br><span class="hljs-comment"># 从远程仓库获取远程仓库中有而本地没有的数据</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="git-pull"><a href="#git-pull" class="headerlink" title="git pull"></a><code>git pull</code></h2><p>从远程获取代码并合并本地的版本</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git pull &lt;remote host&gt;&lt;remote branch&gt;:&lt;<span class="hljs-built_in">local</span> branch&gt;   <span class="hljs-comment"># 拉取到当前分支，本地分支名可省</span><br><span class="hljs-comment"># == git fetch + git merge FETCH_HEAD</span><br><br><span class="hljs-comment"># 将远程主机 origin 中的 main 分支拉取到本地的branchtest</span><br><span class="hljs-comment"># git pull origin main:brantest</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="git-push"><a href="#git-push" class="headerlink" title="git push"></a><code>git push</code></h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git push &lt;remote host&gt;&lt;remote branch&gt;:&lt;<span class="hljs-built_in">local</span> branch&gt;   <span class="hljs-comment"># 拉取到当前分支，本地分支名可省</span><br><span class="hljs-comment"># git push origin main:main</span><br><br><span class="hljs-comment"># 当本地版本与远程版本有差异，可以使用 --force 参数强制推送</span><br></code></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>others</category>
+      </categories>
+      <tags>
+        <tag>Tools</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>数据链路层概述</title>
     <url>/2021/04/21/network/DataLink/</url>
     <content><![CDATA[<blockquote>
@@ -205,6 +309,99 @@
       <categories>
         <category>Computer Network</category>
         <category>Data Link Layer</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>物理层概述</title>
+    <url>/2021/04/19/network/Frame/</url>
+    <content><![CDATA[<blockquote>
+<p>物理层（Physical Layer）作为计算机网络 OSI 模型中最低的一层，关注点在于如何为数据端设备提供传送数据的通路，同时传输数据。</p>
+</blockquote>
+<h1 id="一、物理层概述"><a href="#一、物理层概述" class="headerlink" title="一、物理层概述"></a>一、物理层概述</h1><p>对于物理层协议，一般称之为<strong>规程</strong>，物理层传输数据的单位为**比特(bit)**，则，物理层的任务为如何将 0 或 1 传输到接收方。</p>
+<p>物理层的接口的特性：</p>
+<ol>
+<li> 机械特性：指明接口所用的接线器的形状和尺寸、引线数目和排列、固定和锁定装置等等。<u><em><strong>使硬件部分具有通用性</strong></em></u>；</li>
+<li> 电气特性：指明在接口电缆的各条线上出现的电压的范围。<u><em><strong>创建不同的编码组合，用于对 0 1 进行编码</strong></em></u></li>
+<li>功能特性：指明某条线上出现的某一电平的电压表示何意。<u><em><strong>用于对  0 1 进行编码与译码</strong></em></u></li>
+<li>规程特性：指明规定建立连接时各个相关部件的工作步骤。<u><em><strong>使接收与发送具有规范性</strong></em></u></li>
+</ol>
+<h1 id="二、数据通信基础知识"><a href="#二、数据通信基础知识" class="headerlink" title="二、数据通信基础知识"></a>二、数据通信基础知识</h1><h2 id="1、数据通信系统模型"><a href="#1、数据通信系统模型" class="headerlink" title="1、数据通信系统模型"></a>1、数据通信系统模型</h2><p>一个数据通信系统可分为三部分：源系统（源点+发送器）、传输系统、目的系统（接收器+终点）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/frame/1.png"></p>
+<p>PC机发送的数据将被编码为 0 1 组成的字符串（通过类似ASCII码之类的形式）作为数字比特流，传输给调制解调器，调制器作为一个发送器，将数字比特流转换为模拟信号，通过公共电话网即传输系统传输到目的系统，目的系统中的接收器即解调器将模拟信号解调为数字比特流，传输到终点解码显示。</p>
+<h2 id="2、相关概念"><a href="#2、相关概念" class="headerlink" title="2、相关概念"></a>2、相关概念</h2><ol>
+<li><p><strong>消息</strong>：通信的目的就是传送消息，如视频，语音等都是消息；</p>
+</li>
+<li><p><strong>数据</strong>：运送消息的实体，使用特定的方式表示消息；</p>
+</li>
+<li><p><strong>信号</strong>：数据的电气或电磁的表现；<br>根据信号中代表消息的参数取值方式的不同可分为两大类：</p>
+<ol>
+<li>模拟信号(联系信号)：取值连续；</li>
+<li>数字信号(离散信号)：取值离散，代表不同离散数值的基本波形称为<strong>码元</strong><br>在二进制编码中，0 与 1 就是仅有的两中码元；</li>
+</ol>
+</li>
+<li><p><strong>信道</strong>：向某一方向传送信息的媒体，一条信道通常包含一条发送信道与一条接收信道：<br>就通信双方信息交互的方式而言：</p>
+<ol>
+<li><strong>单向通信</strong>（单工通信）：只有一个方向的通信而不存在反方向交互；</li>
+<li><strong>双向交替通信</strong>（半双工通信）：双方都可发送与接收，但不能同时发送或同时接收消息；</li>
+<li><strong>双向同时通信</strong> （全双工通信）：双方可同时发送与接收；</li>
+</ol>
+</li>
+<li><p><strong>基带信号与带通信号</strong>：</p>
+<ol>
+<li>基带信号：基本频带信号，来自信源的信号，例如说话时的声波；</li>
+<li>带通信号：基带信号经过载波调制得到的信号；</li>
+</ol>
+</li>
+<li><p><strong>调制</strong>：</p>
+<ol>
+<li><p>编码：基带调制，将一种数字信号转换为另一种数字信号；</p>
+<p>常用编码方式：不归零制、 归零制、曼彻斯特编码、差分曼彻斯特编码</p>
+</li>
+<li><p>带通调制：使用载波将数字信号转换为模拟信号；<br>基本的带通调制方法：调幅（AM）、调频（FM）、调相（PM）、正交振幅调制QAM</p>
+</li>
+</ol>
+</li>
+</ol>
+<h1 id="三、物理层下的传输媒体"><a href="#三、物理层下的传输媒体" class="headerlink" title="三、物理层下的传输媒体"></a>三、物理层下的传输媒体</h1><h2 id="1、导引型传输媒体"><a href="#1、导引型传输媒体" class="headerlink" title="1、导引型传输媒体"></a>1、导引型传输媒体</h2><p>导引型传播媒体分为双绞线、同轴电缆、光纤、架空明线等</p>
+<h2 id="2、非引导型传输媒体"><a href="#2、非引导型传输媒体" class="headerlink" title="2、非引导型传输媒体"></a>2、非引导型传输媒体</h2><p>非导向传输媒体就是指自由空间，其中的电磁波传输被称为无线传输。</p>
+<h1 id="四、信道复用技术"><a href="#四、信道复用技术" class="headerlink" title="四、信道复用技术"></a>四、信道复用技术</h1><h2 id="1、频分复用与时分复用"><a href="#1、频分复用与时分复用" class="headerlink" title="1、频分复用与时分复用"></a>1、频分复用与时分复用</h2><p><strong>频分复用FDM</strong>：用户在分配到一定的频带后，在通信过程中自始至终都占用这个频带；其中所有用户在同样的时间占用不同的带宽资源（请注意，这里的“带宽”是频率带宽而不是数据的发送速率）</p>
+<p><strong>时分复用TDM</strong>：按时间轮流分配带宽资源给不同的用户，每个用户只在分配的时间里使用线路传输数据；所有用户在不同的时间占用同样的频带宽度</p>
+<p><strong>统计时分复用STDM</strong>：也叫异步时分复用，改进版时分复用，采用<strong>集中器</strong>将多用户发送的数据存储在缓存中，依次读取，集中为一条数据。</p>
+<h2 id="2、波分复用"><a href="#2、波分复用" class="headerlink" title="2、波分复用"></a>2、波分复用</h2><p>将一系列波长不同的光信号，使用<strong>光复用器</strong>合成一束，沿单根光纤传输，在接收端使用<strong>光分用器</strong>，将不同波长的光信号分开。</p>
+<h2 id="3、码分复用"><a href="#3、码分复用" class="headerlink" title="3、码分复用"></a>3、码分复用</h2><p>技术上叫<strong>码分多址CDMA</strong>，为<strong>扩频</strong>通信中的<strong>直接序列扩频DSSS</strong>，在无线LAN和蜂窝技术中应用比较广泛。</p>
+<p>原理上，通过对每个要发送的比特都乘以一个<strong>码片序列</strong>（编码）的比特进行编码，而该码片序列的变化速率（<strong>码片速率</strong>）比数据比特序列的变化速率快得多，从而使每个数据比特都将对应多个编码比特。同时要保证每个码片序列都不同且相互正交。</p>
+<p>下图为一个简化的CDMA编码/解码。假设干扰的传输比特信号是加性的。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/frame/2.png"></p>
+<p>对数据比特到达CDMA编码器的速率定义了时间单元，从而划分时隙，同时将每个比特时隙划分为 $M$ 个微时隙，通过<br>$$<br>Z_{i,m} = d_i \cdot c_m<br>$$</p>
+<p>获得信号输出  $ Z_{i,m} $ 。当到达接收端时，使用<br>$$<br>d_i = \frac{1}{M} \sum^{M}<em>{m = 1} Z</em>{i,m} \cdot c_m<br>$$<br>获得原数据。</p>
+<p>下图为当存在两个发送方时发生干扰时的解码：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/frame/3.png"></p>
+<p>图中演示了接收方无视发送方2的干扰传输，而是只提取发送方1的数据。根据传入的比特信号可加性，推出下面公式：<br>$$<br>Z_{i,m}^* = \sum_{s = 1}^{N} Z^s_{i,m}<br>$$<br>获得接收方接收的数据比特，并采用公式<br>$$<br>d_i = \frac{1}{M} \sum^M_{m = 1} Z^*_{i,m} \cdot c_m<br>$$<br>对发送方1的数据进行分离。</p>
+<p><strong>公式原理</strong>：只研究时隙 $1$ 时发送的数据，假设发送方1对应的编码为 $A_i$ ，则 $ A_i = (1,1,1,-1,1,-1,-1,-1)$ ，同样发送方2对应的编码为 $ B_i = (1,-1,1,1,1,-1,1,1) $ ，而对于 $A_i$  与  $B_i$ ，其应该不认同且相互<strong>正交</strong>。由公式$(3)$得到的发送数据则为 $ S_i =d_i^1 \cdot A_i + d_i^2 \cdot B_i=(0,-2,0,2,0,0,2,2)$ ，而公式$(4)$的分子对于单个时隙中的数据而言，为向量的点乘<br>$$<br>\begin{align}<br>\sum^M_{m = 1} Z^*_{i,m} \cdot c_m &amp; = S_i \cdot A_i \<br>                                   &amp; = d_i^1 \cdot A_i \cdot A_i + d_i^2 \cdot B_i \cdot A_i \<br>                                   &amp; = d_i^1 \cdot A_i \cdot A_i \<br>                                   &amp; = d_i^1 \cdot |A_i|^2<br>\end{align}<br>$$</p>
+<p>而 $M$ 为微时隙个数，在例子中 $M = 8$ ，且 $A_i$ 中元素都为 $1$ 或 $-1$ ，可知：<br>$$<br>M = |A_i|^2<br>$$<br>则可得：<br>$$<br>d_i = \frac{1}{M} \sum^M_{m = 1} Z^*_{i,m} \cdot c_m<br>$$</p>
+<h1 id="五、宽带接入技术"><a href="#五、宽带接入技术" class="headerlink" title="五、宽带接入技术"></a>五、宽带接入技术</h1><p>通过宽带接入的媒体划分，一类为<strong>有线宽带接入</strong>，一类为<strong>无线宽带接入</strong>。在此只讨论有线宽带接入：</p>
+<h2 id="1、拨号接入"><a href="#1、拨号接入" class="headerlink" title="1、拨号接入"></a>1、拨号接入</h2><p>电话拨号上网，通过安装在计算机上的<strong>调制解调器</strong>，将信号转换为音频信号，从已有的电话网线来传播数据。（互联星空|*´Å`)ﾉ </p>
+<p>缺点：上网速率低，不能同时打电话与上网，上网费用高。</p>
+<h2 id="2、ADSL技术"><a href="#2、ADSL技术" class="headerlink" title="2、ADSL技术"></a>2、ADSL技术</h2><p><strong>非对称数字用户线ADSL</strong>：用数字技术对现有的模拟电话用户线进行改造。</p>
+<p>特性：</p>
+<ul>
+<li>非对称性：体现在下行（从ISP到用户）宽带都远大于上行（从用户到ISP）；</li>
+<li>传输距离取决于数据率与用户的线径；</li>
+<li>通过将低端频谱留给传统电话，而将高端频谱留给用户上网使用，实现上网、打电话互不干扰；</li>
+</ul>
+<p>实现：通过在用户线两端安装一个ADSL调制器（实现方案有多种，我国采用的是<strong>离散多音调DMT</strong>调制技术），从而区分低频与高频。</p>
+<p>基于ADSL的接入网由：数字用户线接入复用器DSLAM、用户线、与相关上网设施组成。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/frame/4.png"></p>
+<p><strong>xDSL技术</strong>是数字用户线路的所有类型的总称，包括RADSL、SDSL、HDSL、ADSL、VDSL和IDSL等。</p>
+<h2 id="3、光纤同轴混合网"><a href="#3、光纤同轴混合网" class="headerlink" title="3、光纤同轴混合网"></a>3、光纤同轴混合网</h2><p><strong>光纤同轴混合网（HFC网）</strong>：结合光纤与同轴电缆的宽带接入网，以频分复用为基础。将有线电视网中的同轴电缆主干部替换为光纤，而在光纤连接到<strong>光纤节点</strong>（将光信号转换为电信号），然后通过同轴电缆传送到用户。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/frame/5.png"></p>
+<p>通过<strong>机顶盒</strong>将数字电视信号从同轴电缆传递给电视机，同时在用户端安装一个为HFC网使用的<strong>电缆调制解调器</strong>（电缆调制解调器规约DOCSIS）。</p>
+<h2 id="4、FTTx技术"><a href="#4、FTTx技术" class="headerlink" title="4、FTTx技术"></a>4、FTTx技术</h2><p><strong>宽带光纤接入方式FTTx</strong>：Firber To The，x 代表接入地点，FTTH则为光纤到户。同样还有FTTC（路边）、FTTZ（小区）、FTTF（楼层）、FTTO（办公室）、FTTD（桌面）等。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/frame/6.png"></p>
+]]></content>
+      <categories>
+        <category>Computer Network</category>
+        <category>Physical Layer</category>
       </categories>
   </entry>
   <entry>
@@ -310,203 +507,6 @@
       </categories>
       <tags>
         <tag>TCP</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>物理层概述</title>
-    <url>/2021/04/19/network/Frame/</url>
-    <content><![CDATA[<blockquote>
-<p>物理层（Physical Layer）作为计算机网络 OSI 模型中最低的一层，关注点在于如何为数据端设备提供传送数据的通路，同时传输数据。</p>
-</blockquote>
-<h1 id="一、物理层概述"><a href="#一、物理层概述" class="headerlink" title="一、物理层概述"></a>一、物理层概述</h1><p>对于物理层协议，一般称之为<strong>规程</strong>，物理层传输数据的单位为**比特(bit)**，则，物理层的任务为如何将 0 或 1 传输到接收方。</p>
-<p>物理层的接口的特性：</p>
-<ol>
-<li> 机械特性：指明接口所用的接线器的形状和尺寸、引线数目和排列、固定和锁定装置等等。<u><em><strong>使硬件部分具有通用性</strong></em></u>；</li>
-<li> 电气特性：指明在接口电缆的各条线上出现的电压的范围。<u><em><strong>创建不同的编码组合，用于对 0 1 进行编码</strong></em></u></li>
-<li>功能特性：指明某条线上出现的某一电平的电压表示何意。<u><em><strong>用于对  0 1 进行编码与译码</strong></em></u></li>
-<li>规程特性：指明规定建立连接时各个相关部件的工作步骤。<u><em><strong>使接收与发送具有规范性</strong></em></u></li>
-</ol>
-<h1 id="二、数据通信基础知识"><a href="#二、数据通信基础知识" class="headerlink" title="二、数据通信基础知识"></a>二、数据通信基础知识</h1><h2 id="1、数据通信系统模型"><a href="#1、数据通信系统模型" class="headerlink" title="1、数据通信系统模型"></a>1、数据通信系统模型</h2><p>一个数据通信系统可分为三部分：源系统（源点+发送器）、传输系统、目的系统（接收器+终点）</p>
-<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/frame/1.png"></p>
-<p>PC机发送的数据将被编码为 0 1 组成的字符串（通过类似ASCII码之类的形式）作为数字比特流，传输给调制解调器，调制器作为一个发送器，将数字比特流转换为模拟信号，通过公共电话网即传输系统传输到目的系统，目的系统中的接收器即解调器将模拟信号解调为数字比特流，传输到终点解码显示。</p>
-<h2 id="2、相关概念"><a href="#2、相关概念" class="headerlink" title="2、相关概念"></a>2、相关概念</h2><ol>
-<li><p><strong>消息</strong>：通信的目的就是传送消息，如视频，语音等都是消息；</p>
-</li>
-<li><p><strong>数据</strong>：运送消息的实体，使用特定的方式表示消息；</p>
-</li>
-<li><p><strong>信号</strong>：数据的电气或电磁的表现；<br>根据信号中代表消息的参数取值方式的不同可分为两大类：</p>
-<ol>
-<li>模拟信号(联系信号)：取值连续；</li>
-<li>数字信号(离散信号)：取值离散，代表不同离散数值的基本波形称为<strong>码元</strong><br>在二进制编码中，0 与 1 就是仅有的两中码元；</li>
-</ol>
-</li>
-<li><p><strong>信道</strong>：向某一方向传送信息的媒体，一条信道通常包含一条发送信道与一条接收信道：<br>就通信双方信息交互的方式而言：</p>
-<ol>
-<li><strong>单向通信</strong>（单工通信）：只有一个方向的通信而不存在反方向交互；</li>
-<li><strong>双向交替通信</strong>（半双工通信）：双方都可发送与接收，但不能同时发送或同时接收消息；</li>
-<li><strong>双向同时通信</strong> （全双工通信）：双方可同时发送与接收；</li>
-</ol>
-</li>
-<li><p><strong>基带信号与带通信号</strong>：</p>
-<ol>
-<li>基带信号：基本频带信号，来自信源的信号，例如说话时的声波；</li>
-<li>带通信号：基带信号经过载波调制得到的信号；</li>
-</ol>
-</li>
-<li><p><strong>调制</strong>：</p>
-<ol>
-<li><p>编码：基带调制，将一种数字信号转换为另一种数字信号；</p>
-<p>常用编码方式：不归零制、 归零制、曼彻斯特编码、差分曼彻斯特编码</p>
-</li>
-<li><p>带通调制：使用载波将数字信号转换为模拟信号；<br>基本的带通调制方法：调幅（AM）、调频（FM）、调相（PM）、正交振幅调制QAM</p>
-</li>
-</ol>
-</li>
-</ol>
-<h1 id="三、物理层下的传输媒体"><a href="#三、物理层下的传输媒体" class="headerlink" title="三、物理层下的传输媒体"></a>三、物理层下的传输媒体</h1><h2 id="1、导引型传输媒体"><a href="#1、导引型传输媒体" class="headerlink" title="1、导引型传输媒体"></a>1、导引型传输媒体</h2><p>导引型传播媒体分为双绞线、同轴电缆、光纤、架空明线等</p>
-<h2 id="2、非引导型传输媒体"><a href="#2、非引导型传输媒体" class="headerlink" title="2、非引导型传输媒体"></a>2、非引导型传输媒体</h2><p>非导向传输媒体就是指自由空间，其中的电磁波传输被称为无线传输。</p>
-<h1 id="四、信道复用技术"><a href="#四、信道复用技术" class="headerlink" title="四、信道复用技术"></a>四、信道复用技术</h1><h2 id="1、频分复用与时分复用"><a href="#1、频分复用与时分复用" class="headerlink" title="1、频分复用与时分复用"></a>1、频分复用与时分复用</h2><p><strong>频分复用FDM</strong>：用户在分配到一定的频带后，在通信过程中自始至终都占用这个频带；其中所有用户在同样的时间占用不同的带宽资源（请注意，这里的“带宽”是频率带宽而不是数据的发送速率）</p>
-<p><strong>时分复用TDM</strong>：按时间轮流分配带宽资源给不同的用户，每个用户只在分配的时间里使用线路传输数据；所有用户在不同的时间占用同样的频带宽度</p>
-<p><strong>统计时分复用STDM</strong>：也叫异步时分复用，改进版时分复用，采用<strong>集中器</strong>将多用户发送的数据存储在缓存中，依次读取，集中为一条数据。</p>
-<h2 id="2、波分复用"><a href="#2、波分复用" class="headerlink" title="2、波分复用"></a>2、波分复用</h2><p>将一系列波长不同的光信号，使用<strong>光复用器</strong>合成一束，沿单根光纤传输，在接收端使用<strong>光分用器</strong>，将不同波长的光信号分开。</p>
-<h2 id="3、码分复用"><a href="#3、码分复用" class="headerlink" title="3、码分复用"></a>3、码分复用</h2><p>技术上叫<strong>码分多址CDMA</strong>，为<strong>扩频</strong>通信中的<strong>直接序列扩频DSSS</strong>，在无线LAN和蜂窝技术中应用比较广泛。</p>
-<p>原理上，通过对每个要发送的比特都乘以一个<strong>码片序列</strong>（编码）的比特进行编码，而该码片序列的变化速率（<strong>码片速率</strong>）比数据比特序列的变化速率快得多，从而使每个数据比特都将对应多个编码比特。同时要保证每个码片序列都不同且相互正交。</p>
-<p>下图为一个简化的CDMA编码/解码。假设干扰的传输比特信号是加性的。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/frame/2.png"></p>
-<p>对数据比特到达CDMA编码器的速率定义了时间单元，从而划分时隙，同时将每个比特时隙划分为 $M$ 个微时隙，通过<br>$$<br>Z_{i,m} = d_i \cdot c_m<br>$$</p>
-<p>获得信号输出  $ Z_{i,m} $ 。当到达接收端时，使用<br>$$<br>d_i = \frac{1}{M} \sum^{M}<em>{m = 1} Z</em>{i,m} \cdot c_m<br>$$<br>获得原数据。</p>
-<p>下图为当存在两个发送方时发生干扰时的解码：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/frame/3.png"></p>
-<p>图中演示了接收方无视发送方2的干扰传输，而是只提取发送方1的数据。根据传入的比特信号可加性，推出下面公式：<br>$$<br>Z_{i,m}^* = \sum_{s = 1}^{N} Z^s_{i,m}<br>$$<br>获得接收方接收的数据比特，并采用公式<br>$$<br>d_i = \frac{1}{M} \sum^M_{m = 1} Z^*_{i,m} \cdot c_m<br>$$<br>对发送方1的数据进行分离。</p>
-<p><strong>公式原理</strong>：只研究时隙 $1$ 时发送的数据，假设发送方1对应的编码为 $A_i$ ，则 $ A_i = (1,1,1,-1,1,-1,-1,-1)$ ，同样发送方2对应的编码为 $ B_i = (1,-1,1,1,1,-1,1,1) $ ，而对于 $A_i$  与  $B_i$ ，其应该不认同且相互<strong>正交</strong>。由公式$(3)$得到的发送数据则为 $ S_i =d_i^1 \cdot A_i + d_i^2 \cdot B_i=(0,-2,0,2,0,0,2,2)$ ，而公式$(4)$的分子对于单个时隙中的数据而言，为向量的点乘<br>$$<br>\begin{align}<br>\sum^M_{m = 1} Z^*_{i,m} \cdot c_m &amp; = S_i \cdot A_i \<br>                                   &amp; = d_i^1 \cdot A_i \cdot A_i + d_i^2 \cdot B_i \cdot A_i \<br>                                   &amp; = d_i^1 \cdot A_i \cdot A_i \<br>                                   &amp; = d_i^1 \cdot |A_i|^2<br>\end{align}<br>$$</p>
-<p>而 $M$ 为微时隙个数，在例子中 $M = 8$ ，且 $A_i$ 中元素都为 $1$ 或 $-1$ ，可知：<br>$$<br>M = |A_i|^2<br>$$<br>则可得：<br>$$<br>d_i = \frac{1}{M} \sum^M_{m = 1} Z^*_{i,m} \cdot c_m<br>$$</p>
-<h1 id="五、宽带接入技术"><a href="#五、宽带接入技术" class="headerlink" title="五、宽带接入技术"></a>五、宽带接入技术</h1><p>通过宽带接入的媒体划分，一类为<strong>有线宽带接入</strong>，一类为<strong>无线宽带接入</strong>。在此只讨论有线宽带接入：</p>
-<h2 id="1、拨号接入"><a href="#1、拨号接入" class="headerlink" title="1、拨号接入"></a>1、拨号接入</h2><p>电话拨号上网，通过安装在计算机上的<strong>调制解调器</strong>，将信号转换为音频信号，从已有的电话网线来传播数据。（星空互联|*´Å`)ﾉ </p>
-<p>缺点：上网速率低，不能同时打电话与上网，上网费用高。</p>
-<h2 id="2、ADSL技术"><a href="#2、ADSL技术" class="headerlink" title="2、ADSL技术"></a>2、ADSL技术</h2><p><strong>非对称数字用户线ADSL</strong>：用数字技术对现有的模拟电话用户线进行改造。</p>
-<p>特性：</p>
-<ul>
-<li>非对称性：体现在下行（从ISP到用户）宽带都远大于上行（从用户到ISP）；</li>
-<li>传输距离取决于数据率与用户的线径；</li>
-<li>通过将低端频谱留给传统电话，而将高端频谱留给用户上网使用，实现上网、打电话互不干扰；</li>
-</ul>
-<p>实现：通过在用户线两端安装一个ADSL调制器（实现方案有多种，我国采用的是<strong>离散多音调DMT</strong>调制技术），从而区分低频与高频。</p>
-<p>基于ADSL的接入网由：数字用户线接入复用器DSLAM、用户线、与相关上网设施组成。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/frame/4.png"></p>
-<p><strong>xDSL技术</strong>是数字用户线路的所有类型的总称，包括RADSL、SDSL、HDSL、ADSL、VDSL和IDSL等。</p>
-<h2 id="3、光纤同轴混合网"><a href="#3、光纤同轴混合网" class="headerlink" title="3、光纤同轴混合网"></a>3、光纤同轴混合网</h2><p><strong>光纤同轴混合网（HFC网）</strong>：结合光纤与同轴电缆的宽带接入网，以频分复用为基础。将有线电视网中的同轴电缆主干部替换为光纤，而在光纤连接到<strong>光纤节点</strong>（将光信号转换为电信号），然后通过同轴电缆传送到用户。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/frame/5.png"></p>
-<p>通过<strong>机顶盒</strong>将数字电视信号从同轴电缆传递给电视机，同时在用户端安装一个为HFC网使用的<strong>电缆调制解调器</strong>（电缆调制解调器规约DOCSIS）。</p>
-<h2 id="4、FTTx技术"><a href="#4、FTTx技术" class="headerlink" title="4、FTTx技术"></a>4、FTTx技术</h2><p><strong>宽带光纤接入方式FTTx</strong>：Firber To The，x 代表接入地点，FTTH则为光纤到户。同样还有FTTC（路边）、FTTZ（小区）、FTTF（楼层）、FTTO（办公室）、FTTD（桌面）等。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/frame/6.png"></p>
-]]></content>
-      <categories>
-        <category>Computer Network</category>
-        <category>Physical Layer</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>Git 使用指导</title>
-    <url>/2021/03/11/tools/gitStudy/</url>
-    <content><![CDATA[<p>什么是 **<a href="https://git-scm.com/">Git</a> **? </p>
-<blockquote>
-<p>Git — The stupid content tracker, 傻瓜内容跟踪器。</p>
-<p>一个开源的分布式版本控制系统，可以有效、高速地处理从很小到非常大的项目版本管理。</p>
-</blockquote>
-<h1 id="Git-工作流程"><a href="#Git-工作流程" class="headerlink" title="Git 工作流程"></a>Git 工作流程</h1><figure class="highlight html"><table><tr><td class="code"><pre><code class="hljs html">                                  ┌────────────────┐<br>                              ┌───► git clone <span class="hljs-tag">&lt;<span class="hljs-name">URL</span>&gt;</span>│<br>                              │   └────────────────┘<br>   ┌────────────────────────┐ │<br>   │create a git repository ├─┤<br>   └───────────┬────────────┘ │<br>               │              │   ┌──────────────┐<br>               │              └───►   git init   │<br>               │update            └──────────────┘<br>               │delete<br>               │ add<br>               │<br>               │<br>┌──────────────▼────────────────────┐     ┌───────────────────┐<br>│ update the file of the repository ├──┬──► git add <span class="hljs-tag">&lt;<span class="hljs-name">filename</span>&gt;</span>│<br>└──────────────┬────────────────────┘  │  └───────────────────┘<br>               │                       │<br>               │                       │  ┌───────────────────┐<br>               │                       ├──►    git status     │<br>               │                       │  └───────────────────┘<br>               │                       │<br> ┌─────────────▼──────────────┐        │  ┌─────────────────────────┐<br> │ commit the update to stage ├────────┴──► git commit -m <span class="hljs-tag">&lt;<span class="hljs-name">message</span>&gt;</span> │<br> └─────────────┬──────────────┘           └─────────────────────────┘<br>               │<br>               │<br>               │<br>┌──────────────▼────────────────┐           ┌──────────┐<br>│ push the commit to repository ├───────────► git push │<br>└───────────────────────────────┘           └──────────┘<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/tools/gitStudy/1.jpg"></p>
-<h1 id="配置-Git"><a href="#配置-Git" class="headerlink" title="配置 Git"></a>配置 Git</h1><p>使用命令 <code>git config</code> 来设置 Git 相关配置</p>
-<h2 id="配置用户信息"><a href="#配置用户信息" class="headerlink" title="配置用户信息"></a>配置用户信息</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 在特定项目中使用用户信息，新设定将保存在当前项目的 .git/config 中</span><br>$ git config user.name <span class="hljs-string">&quot;ygwhere&quot;</span>			<span class="hljs-comment"># 配置个人用户名称</span><br>$ git config user.email ygwhere@gmail.com	<span class="hljs-comment"># 配置个人电子邮件地址</span><br><span class="hljs-comment"># --global 参数 : 将更改用户主目录下配置文件 .gitconfig，项目未指定情况下降使用全局设置</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="修改文本编辑器"><a href="#修改文本编辑器" class="headerlink" title="修改文本编辑器"></a>修改文本编辑器</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># Git 默认使用文本编辑器为 Vi 或 Vim，可设置为其他项目</span><br>$ git config --global core.editor <span class="hljs-string">&quot;\&quot;‪D:/common/Notepad++/notepad++.exe\&quot;&quot;</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="查看配置信息"><a href="#查看配置信息" class="headerlink" title="查看配置信息"></a>查看配置信息</h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git config --list<br></code></pre></td></tr></table></figure>
-
-
-
-<p>以上的全部修改都可以在 <code>~/.gitconfig</code> 或 <code>/etc/gitconfig</code> 中查看或修改</p>
-<figure class="highlight ini"><table><tr><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[user]</span><br>	<span class="hljs-attr">name</span> = YGwhere<br>	<span class="hljs-attr">email</span> = ygwhere@gmail.com<br><span class="hljs-section">[core]</span><br>	<span class="hljs-attr">editor</span> = <span class="hljs-string">&quot;\&quot;‪D:/common/Notepad++/notepad++.exe\&quot;&quot;</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h1 id="创建版本库"><a href="#创建版本库" class="headerlink" title="创建版本库"></a>创建版本库</h1><h2 id="git-init"><a href="#git-init" class="headerlink" title="git init"></a><code>git init</code></h2><p>用于初始化一个版本库</p>
-<p>使用：选择合适文件夹 (路径名尽量不包含中文)，在目录下的命令行中运行该命令，Git 将自动将该文件夹作为仓库，并创建一个名为 <code>.git</code> 的隐藏文件夹，其中包含 Git 版本库中的配置文件。</p>
-<h2 id="git-clone-lt-URL-gt"><a href="#git-clone-lt-URL-gt" class="headerlink" title="git clone &lt;URL&gt;"></a><code>git clone &lt;URL&gt;</code></h2><p>从远程仓库 (Github, Gitee等) 中克隆仓库，默认克隆仓库位置位于当前目录下。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git <span class="hljs-built_in">clone</span> &lt;url&gt; [name]<br><span class="hljs-comment"># 可指定拷贝的 git 项目在本地的项目名为 name</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h1 id="管理修改"><a href="#管理修改" class="headerlink" title="管理修改"></a>管理修改</h1><h2 id="git-status"><a href="#git-status" class="headerlink" title="git status"></a><code>git status</code></h2><p>查看仓库中文件状态，包括仓库中文件的增删改状态，并提示将相关文件添加到暂存区或提交到版本库。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git status -s<br><span class="hljs-comment"># -s 参数 : 获得简短的输出</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="git-diff-lt-filename-gt"><a href="#git-diff-lt-filename-gt" class="headerlink" title="git diff &lt;filename&gt;"></a><code>git diff &lt;filename&gt;</code></h2><p>查看工作区中文件与版本库中文件差异。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git diff &lt;filename&gt;<br><span class="hljs-comment"># 显示暂存区和工作区的差异</span><br><br>$ git diff --cached [file] <span class="hljs-comment"># == --staged</span><br><span class="hljs-comment"># 显示暂存区和上一次提交的差异</span><br><br>$ git diff [first-branch]...[second-branch]<br><span class="hljs-comment"># 显示两次提交之间的差异</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="git-add-lt-filename-gt"><a href="#git-add-lt-filename-gt" class="headerlink" title="git add &lt;filename&gt;"></a><code>git add &lt;filename&gt;</code></h2><p>将工作区中文件的修改添加到暂存区。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git add [file1] [file2] ...<br><span class="hljs-comment"># 添加多个文件</span><br><br>$ git add [dir]<br><span class="hljs-comment"># 添加指定目录到暂存区，包括子目录</span><br><br>$ git add .<br><span class="hljs-comment"># 添加当前目录的所有文件夹到暂存区</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="git-commit"><a href="#git-commit" class="headerlink" title="git commit "></a><code>git commit </code></h2><p>提交暂存区到本地仓库</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git commit -m [message]<br><br><span class="hljs-comment"># -m 参数 : 为此次提交添加备注信息，一般建议添加</span><br><span class="hljs-comment"># -a 参数 : 设置修改文件后不需要执行 git add 命令，直接提交</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="git-reset"><a href="#git-reset" class="headerlink" title="git reset"></a><code>git reset</code></h2><p>回退版本</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git reset [--soft | --mixed | --hard] [HEAD]<br><span class="hljs-comment"># --mixed 参数 : 默认可为空，用于重置暂存区的文件与上一次的提交保持一致，工作区文件内容保持不变</span><br><span class="hljs-comment"># -soft 参数 : 用于回退到某个版本</span><br><span class="hljs-comment"># --hard 参数 : 撤销工作区中所有未提交的修改内容，将暂存区与工作区都回到上一次版本，并删除之前的所有信息提交</span><br><br><span class="hljs-comment"># HEAD 说明 : </span><br><span class="hljs-comment">#	HEAD -&gt; 当前版本  HEAD^ -&gt; 上个版本		HEAD^^ -&gt; 上上个版本 ...</span><br><span class="hljs-comment">#	HEAD~0 -&gt; 当前版本	HEAD~1 -&gt; 上个版本	HEAD^2 -&gt; 上上个版本 ...</span><br><br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="git-rm"><a href="#git-rm" class="headerlink" title="git rm"></a><code>git rm</code></h2><p>删除工作区文件</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git rm &lt;file&gt;<br><span class="hljs-comment"># 将文件从暂存区和工作区中删除</span><br><span class="hljs-comment"># -f 参数 : 删除之前修改过并已经放入暂存区中的文件</span><br><br>$ git rm --cached &lt;file&gt;<br><span class="hljs-comment"># 将文件从暂存区中移除，但保留工作区中文件</span><br><br><span class="hljs-comment"># &lt;file&gt; 同样可以为 &lt;dir&gt; 文件目录，当问目录时将同时删除其子目录</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="git-mv"><a href="#git-mv" class="headerlink" title="git mv"></a><code>git mv</code></h2><p>移动或重命名工作区文件</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git mv [file][newfile]<br><span class="hljs-comment"># -f 参数 : 强制重命名文件，即使文件名已存在</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h1 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h1><h2 id="git-log"><a href="#git-log" class="headerlink" title="git log"></a><code>git log</code></h2><p>查看项目的提交历史</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git <span class="hljs-built_in">log</span><br><br><span class="hljs-comment"># --oneline : 查看历史记录的简洁版本</span><br><span class="hljs-comment"># --graph : 将历史中的分支与合并用拓扑图的形式表现出来</span><br><span class="hljs-comment"># --reverse : 逆向显示全部日志</span><br><span class="hljs-comment"># --author : 查找指定用户的提交日志，--author=ygwhere</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="git-blame"><a href="#git-blame" class="headerlink" title="git blame"></a><code>git blame</code></h2><p>查看指定文件的修改记录</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git blame &lt;filename&gt;<br><span class="hljs-comment"># 以列表形式显示修改记录</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h1 id="远程操作"><a href="#远程操作" class="headerlink" title="远程操作"></a>远程操作</h1><h2 id="git-remote"><a href="#git-remote" class="headerlink" title="git remote"></a><code>git remote</code></h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git remote -v<br><span class="hljs-comment"># 显示所有远程仓库</span><br>origin  https://github.com/YGwhere/BlogSrcBak.git (fetch)<br>origin  https://github.com/YGwhere/BlogSrcBak.git (push)<br><span class="hljs-comment"># origin 为远程地址别名</span><br><br>$ git remote show [remote]<br><span class="hljs-comment"># 显示某个远程仓库的信息</span><br><br>$ git remote add [shortname] [url]<br><span class="hljs-comment"># 添加远程版本库</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="git-fetch"><a href="#git-fetch" class="headerlink" title="git fetch"></a><code>git fetch</code></h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git merge<br><span class="hljs-comment"># 从远程仓库提取数据并尝试合并到当前分支</span><br><br>$ git merge [<span class="hljs-built_in">alias</span>]/[branch]  <span class="hljs-comment"># git merge origin/master</span><br><span class="hljs-comment"># 将服务器上任何更新合并到当前分支</span><br><br>$ git fetch [<span class="hljs-built_in">alias</span>]		<span class="hljs-comment"># git fetch origin</span><br><span class="hljs-comment"># 从远程仓库获取远程仓库中有而本地没有的数据</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="git-pull"><a href="#git-pull" class="headerlink" title="git pull"></a><code>git pull</code></h2><p>从远程获取代码并合并本地的版本</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git pull &lt;remote host&gt;&lt;remote branch&gt;:&lt;<span class="hljs-built_in">local</span> branch&gt;   <span class="hljs-comment"># 拉取到当前分支，本地分支名可省</span><br><span class="hljs-comment"># == git fetch + git merge FETCH_HEAD</span><br><br><span class="hljs-comment"># 将远程主机 origin 中的 main 分支拉取到本地的branchtest</span><br><span class="hljs-comment"># git pull origin main:brantest</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="git-push"><a href="#git-push" class="headerlink" title="git push"></a><code>git push</code></h2><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git push &lt;remote host&gt;&lt;remote branch&gt;:&lt;<span class="hljs-built_in">local</span> branch&gt;   <span class="hljs-comment"># 拉取到当前分支，本地分支名可省</span><br><span class="hljs-comment"># git push origin main:main</span><br><br><span class="hljs-comment"># 当本地版本与远程版本有差异，可以使用 --force 参数强制推送</span><br></code></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>others</category>
-      </categories>
-      <tags>
-        <tag>Tools</tag>
       </tags>
   </entry>
 </search>

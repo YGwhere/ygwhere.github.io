@@ -160,7 +160,7 @@
 </nav>
 
     <div class="banner" id="banner" parallax=true
-         style="background: url('https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/transport/tcphandshake/banner_img.jpg') no-repeat center center;
+         style="background: url('https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/frame/banner_img.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -296,7 +296,7 @@
 <p><strong>公式原理</strong>：只研究时隙 $1$ 时发送的数据，假设发送方1对应的编码为 $A_i$ ，则 $ A_i = (1,1,1,-1,1,-1,-1,-1)$ ，同样发送方2对应的编码为 $ B_i = (1,-1,1,1,1,-1,1,1) $ ，而对于 $A_i$  与  $B_i$ ，其应该不认同且相互<strong>正交</strong>。由公式$(3)$得到的发送数据则为 $ S_i =d_i^1 \cdot A_i + d_i^2 \cdot B_i=(0,-2,0,2,0,0,2,2)$ ，而公式$(4)$的分子对于单个时隙中的数据而言，为向量的点乘<br>$$<br>\begin{align}<br>\sum^M_{m = 1} Z^*_{i,m} \cdot c_m &amp; = S_i \cdot A_i \<br>                                   &amp; = d_i^1 \cdot A_i \cdot A_i + d_i^2 \cdot B_i \cdot A_i \<br>                                   &amp; = d_i^1 \cdot A_i \cdot A_i \<br>                                   &amp; = d_i^1 \cdot |A_i|^2<br>\end{align}<br>$$</p>
 <p>而 $M$ 为微时隙个数，在例子中 $M = 8$ ，且 $A_i$ 中元素都为 $1$ 或 $-1$ ，可知：<br>$$<br>M = |A_i|^2<br>$$<br>则可得：<br>$$<br>d_i = \frac{1}{M} \sum^M_{m = 1} Z^*_{i,m} \cdot c_m<br>$$</p>
 <h1 id="五、宽带接入技术"><a href="#五、宽带接入技术" class="headerlink" title="五、宽带接入技术"></a>五、宽带接入技术</h1><p>通过宽带接入的媒体划分，一类为<strong>有线宽带接入</strong>，一类为<strong>无线宽带接入</strong>。在此只讨论有线宽带接入：</p>
-<h2 id="1、拨号接入"><a href="#1、拨号接入" class="headerlink" title="1、拨号接入"></a>1、拨号接入</h2><p>电话拨号上网，通过安装在计算机上的<strong>调制解调器</strong>，将信号转换为音频信号，从已有的电话网线来传播数据。（星空互联|*´Å`)ﾉ </p>
+<h2 id="1、拨号接入"><a href="#1、拨号接入" class="headerlink" title="1、拨号接入"></a>1、拨号接入</h2><p>电话拨号上网，通过安装在计算机上的<strong>调制解调器</strong>，将信号转换为音频信号，从已有的电话网线来传播数据。（互联星空|*´Å`)ﾉ </p>
 <p>缺点：上网速率低，不能同时打电话与上网，上网费用高。</p>
 <h2 id="2、ADSL技术"><a href="#2、ADSL技术" class="headerlink" title="2、ADSL技术"></a>2、ADSL技术</h2><p><strong>非对称数字用户线ADSL</strong>：用数字技术对现有的模拟电话用户线进行改造。</p>
 <p>特性：</p>
