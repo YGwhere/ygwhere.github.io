@@ -160,7 +160,7 @@
 </nav>
 
     <div class="banner" id="banner" parallax=true
-         style="background: url('https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/transport/tcphandshake/banner_img.jpg') no-repeat center center;
+         style="background: url('https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/DataLink/banner_img.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -187,7 +187,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      674 字
+      4.6k 字
     </span>
   
 
@@ -197,7 +197,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      7
+      49
        分钟
     </span>
   
@@ -240,7 +240,89 @@
 <p><strong>网络适配器</strong>（网络接口卡NIC）：链路层的主体实现部分，核心是链路层控制器，一般包含了数据链路层和物理层两层的功能。</p>
 <h2 id="1-2-三个基本问题"><a href="#1-2-三个基本问题" class="headerlink" title="1.2 三个基本问题"></a>1.2 三个基本问题</h2><h3 id="1-2-1-封装成帧"><a href="#1-2-1-封装成帧" class="headerlink" title="1.2.1 封装成帧"></a>1.2.1 封装成帧</h3><p>指在一段数据（IP数据报）的前后添加首部和尾部，构成一个帧，从而进行<strong>帧定界</strong>；当数据是ASCLL码组成的文本文件时，可以使用特殊帧定界符（SOH - 0x01 作为帧开始符，EOT - 0x04 作为帧结束符）。同时，所有的数据链路层协议都定义了数据部分长度上限即<strong>最大传输单元 MTU</strong>，即IP数据报的长度不能超过MTU。以太网的MTU一般为1500字节，所以IP数据报的总长度不能超过1500字节。</p>
 <h3 id="1-2-2-透明传输"><a href="#1-2-2-透明传输" class="headerlink" title="1.2.2 透明传输"></a>1.2.2 透明传输</h3><p>使数据字段中的某个字节的二进制代码与控制字符SOH或EOT混淆，即将数据字段看作透明不存在一般。采取的方法一般是字节填充或字符填充：发送端的数据链路层在数据字段中的SOH或EOT字段前添加一个转义字符ESC(0x1B)，当转义字符也存在于数据字段中，同样在其前面添加一个转义字符，而接收端的数据链路层在将数据传输到网络层前删除数据字段中的转义字符。</p>
-<h3 id="1-2-3-差错检测"><a href="#1-2-3-差错检测" class="headerlink" title="1.2.3 差错检测"></a>1.2.3 差错检测</h3><h1 id="二、使用点对点信道的数据链路层"><a href="#二、使用点对点信道的数据链路层" class="headerlink" title="二、使用点对点信道的数据链路层"></a>二、使用点对点信道的数据链路层</h1><h2 id="2-1-应用：点对点协议PPP"><a href="#2-1-应用：点对点协议PPP" class="headerlink" title="2.1 应用：点对点协议PPP"></a>2.1 应用：点对点协议PPP</h2><h1 id="三、使用广播信道的数据链路层"><a href="#三、使用广播信道的数据链路层" class="headerlink" title="三、使用广播信道的数据链路层"></a>三、使用广播信道的数据链路层</h1><h2 id="3-1-多路访问链路和协议"><a href="#3-1-多路访问链路和协议" class="headerlink" title="3.1 多路访问链路和协议"></a>3.1 多路访问链路和协议</h2><h3 id="3-1-1-信道划分协议"><a href="#3-1-1-信道划分协议" class="headerlink" title="3.1.1 信道划分协议"></a>3.1.1 信道划分协议</h3><h3 id="3-1-2-随机接入协议"><a href="#3-1-2-随机接入协议" class="headerlink" title="3.1.2 随机接入协议"></a>3.1.2 随机接入协议</h3><h3 id="3-1-3-轮流协议"><a href="#3-1-3-轮流协议" class="headerlink" title="3.1.3 轮流协议"></a>3.1.3 轮流协议</h3><h1 id="四、交换局域网"><a href="#四、交换局域网" class="headerlink" title="四、交换局域网"></a>四、交换局域网</h1><h2 id="4-1-广播信道的应用：局域网"><a href="#4-1-广播信道的应用：局域网" class="headerlink" title="4.1 广播信道的应用：局域网"></a>4.1 广播信道的应用：局域网</h2><h2 id="4-2-以太网"><a href="#4-2-以太网" class="headerlink" title="4.2 以太网"></a>4.2 以太网</h2><h2 id="4-3-扩展的以太网"><a href="#4-3-扩展的以太网" class="headerlink" title="4.3 扩展的以太网"></a>4.3 扩展的以太网</h2><h1 id="五、数据链路层设备"><a href="#五、数据链路层设备" class="headerlink" title="五、数据链路层设备"></a>五、数据链路层设备</h1><h2 id="5-1-网卡"><a href="#5-1-网卡" class="headerlink" title="5.1 网卡"></a>5.1 网卡</h2><h2 id="5-2-网桥"><a href="#5-2-网桥" class="headerlink" title="5.2 网桥"></a>5.2 网桥</h2><h2 id="5-3-链路层交换机"><a href="#5-3-链路层交换机" class="headerlink" title="5.3 链路层交换机"></a>5.3 链路层交换机</h2>
+<h3 id="1-2-3-差错检测"><a href="#1-2-3-差错检测" class="headerlink" title="1.2.3 差错检测"></a>1.2.3 差错检测</h3><p>在传输过程中可能发生<strong>比特差错</strong>，而一段时间内，传输错误的比特占传输比特总数的比率称为<strong>误码率BER</strong>。</p>
+<p>由于信息链路并非理想的，所以必须采用各种差错检测措施。在此介绍三种差错检测的技术：奇偶校验、校验和、循环冗余检测。</p>
+<p>差错控制技术：发现差错后如何进行处理。接收方检测和纠正差错的能力被称为<strong>前向纠错FEC</strong>，常用<strong>海明码</strong>可单独用于网络环境中，或与另一种差错控制方式 <strong>ARQ</strong>（自动重传请求）技术一同使用。</p>
+<h4 id="a、奇偶校验"><a href="#a、奇偶校验" class="headerlink" title="a、奇偶校验"></a>a、奇偶校验</h4><p>奇偶校验PCC：对于信息 $D$ 中 $d$ 个比特，只需附加一个比特，使得该 $d+1$ 个比特中 $1$ 的总数是偶数，该方法称之为偶校验方案。同样，奇校验方案则使 $1$ 的总数为奇数。</p>
+<p>特点：原理简单，校验迅速，且附加比特少，但当发生一个以上的比特差错时，将无法保证检验结果。</p>
+<p>在单比特奇偶校验方案的基础上，可以演化为<strong>二维奇偶校验</strong>方案，通过行校验和列校验可以实现的单个比特差错的识别，甚至纠正该错误。而对于一个分组中的两个比特差错的任意组合也同样可以检测出来。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/DataLink/1.jpg" srcset="/img/loading.gif" alt=""></p>
+<p>奇偶校验应用的例子：商品UPC条形码中数据比特就是采用奇校验进行辅助检测的。</p>
+<h4 id="b、校验和"><a href="#b、校验和" class="headerlink" title="b、校验和"></a>b、校验和</h4><p><strong>校验和checksum</strong>的原理是将d个比特数据作为一个k比特整数序列处理，将序列中全部比特整数相加，同时丢弃溢出的高位，将最终结果作为校验码附加在数据中。接收方只需要将所有比特数据作为k比特整数序列相加，判断得到的结果是否全部为 $1$ 来判断是否发送了比特差错。</p>
+<p>在TCP和UDP中使用的就是16位比特的校验和。 </p>
+<h4 id="c、循环冗余检测"><a href="#c、循环冗余检测" class="headerlink" title="c、循环冗余检测"></a>c、循环冗余检测</h4><p>循环冗余检测CRC是根据文件或数据包产生简短<strong>固定位数校验码</strong>的一种信道编码技术，在此用作数据链路层的一种<strong>检错方式</strong>。</p>
+<p>原理：在发送端将数据划分为组，每组为$K$个比特，假设发送数据为 $M=101001 (K = 6)$ ，则在 $M$ 后面添加 $n$ 位<strong>冗余码</strong>（其为帧校验检测序列FCS，仅代表802.3帧或Ethernet帧的最后一个字段（4字节），在检错方法上可选用其他非CRC的方法）。构成了 $K + n$ 位大小的帧发送出去。</p>
+<p>先采用二进制的<strong>模2运算</strong>（模2运算时加法不进位，减法不借位）进行 $2^n$ 乘 $M$ 的运算（等同于在 $M$ 后添加 n 个 0），用得到的 $K+n$ 位的数同样使用模2运算的除法（等同于异或XOR）除以事先规定的长度为 $n+1$ 位的除数 $Q$ ，从而得到 $n$ 位的余数 $R$。</p>
+<p>余数$R$ 将作为FCS添加在 $M$ 后，构成一个 $K+n$ 位的帧。接收端校验时，将该帧除以规定好的除数 $Q$，若 $R=0$ ，则判断该帧无差错（因为误码后，得到的余数仍为0的概率很小）；若 $R \neq 0$ ，则判断该帧有差错，丢弃该帧。</p>
+<p>为方便表达，除数 $Q$ 采用多项式 $P(X) = X^3+X^2+1$ 表示 ，称该多项式为<strong>生成多项式</strong>。</p>
+<p><a target="_blank" rel="noopener" href="https://tools.lddgo.net/encrypt/crc">在线CRC计算工具与常用生成多项式查询</a></p>
+<p>通过采用CRC校验，只可以向上提供<strong>无比特差错</strong>传输，但实现类似TCP形式的<strong>可靠传输</strong>还需要<strong>帧编号</strong>、<strong>确认</strong>和<strong>重传机制</strong>用来解决<strong>帧丢失</strong>、<strong>帧重复</strong>、<strong>帧失序</strong>的传输差错。</p>
+<h1 id="二、使用点对点信道的数据链路层"><a href="#二、使用点对点信道的数据链路层" class="headerlink" title="二、使用点对点信道的数据链路层"></a>二、使用点对点信道的数据链路层</h1><p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/DataLink/2.jpg" srcset="/img/loading.gif" alt=""></p>
+<p>在过去局域网中的数据链路层协议有过面向字符的BSC协议、面向比特的SDLC和HDLC协议<sup><a href="#fn_1" id="reffn_1">1</a></sup>，但如今PPP协议已成为非常广泛的广域网数据链路层协议。</p>
+<h2 id="2-1-应用：点对点协议PPP"><a href="#2-1-应用：点对点协议PPP" class="headerlink" title="2.1 应用：点对点协议PPP"></a>2.1 应用：点对点协议PPP</h2><p>PPP协议作为第二层网络协议，无需实现TCP协议那样复杂的功能，而在简单的IP协议之下，也无需提供比IP协议更多的功能，因此应满足<strong>简单</strong>的需求。同时，需要保证链路层协议的三个基本问题（<strong>封装成帧</strong>、<strong>透明性</strong>、<strong>差错检测</strong>）。</p>
+<p>为了向上兼容，保证多种网络层协议能够在同一物理链路上运行，需要PPP协议支持<strong>多种网络协议</strong>。而向下兼容，就得支持在<strong>多种类型链路</strong>上运行。为了及时发现故障，则保证其能够<strong>检测连接状态</strong>。而为了标准化，需要确定<strong>最大传送单元MTU</strong>（可载荷数据部分最大长度）。而对于两个网络层，需要<strong>网络层地址协商</strong>，来确定传输的两端。</p>
+<p>PPP协议由<strong>封装</strong>（将不同网络层协议同时在同一链路传输的多路复用技术）、<strong>链路控制协议LCP</strong>、<strong>网络控制协议NCP</strong>。</p>
+<h3 id="2-1-1-PPP协议的帧格式"><a href="#2-1-1-PPP协议的帧格式" class="headerlink" title="2.1.1 PPP协议的帧格式"></a>2.1.1 PPP协议的帧格式</h3><p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/DataLink/3.png" srcset="/img/loading.gif" alt=""></p>
+<p><strong>标志字段F</strong>：首部的第一个字段和尾部的第二个字段，规定为 0x7E（01111110），为PPP帧的定界符。实现了<strong>封装成帧</strong>。当连续出现两个标志字段，则代表这是空帧。</p>
+<p><strong>地址字段A</strong>（0xFF = 11111111）、<strong>控制字段</strong>（0x03 = 00000011）并不携带PPP帧的信息。</p>
+<p><strong>协议字段</strong>：2个字节，C = 0x0021 时，为IP数据报，当 C = 0xC021，为LCP的数据，0x8021代表网络层的控制数据。</p>
+<p><strong>信息字段</strong>：长度可变。PPP中规定不能超过1500字节。</p>
+<h3 id="2-1-2-PPP协议实现透明传输"><a href="#2-1-2-PPP协议实现透明传输" class="headerlink" title="2.1.2 PPP协议实现透明传输"></a>2.1.2 PPP协议实现透明传输</h3><p>而为了保证<strong>透明性</strong>，防止信息字段中存在标志字段一样的比特组合使识别时发送混淆，在<strong>异步传输</strong>（逐个字符传送）时，PPP协议将转义字符定义为 0x7D， 对信息字段采用了<strong>字节填充</strong>的手段：</p>
+<ul>
+<li>将信息字段中的每一个 0x7E 字节转换为 2 字节序列（0x7D, 0x5E）；</li>
+<li>将每一个 0x7D 字节转换为 2 字节序列（0x7D, 0x5D）；</li>
+<li>在 ASCII 码的控制字符（数值小于 0x20 的字符）前，添加一个 0x7D 字节，同时将该字符编码改变（原字节加上 0x20 ）。例如 0x03 变为 (0x7D, 0x23)。</li>
+</ul>
+<p>而在 SONET/SDH 链路是采用<strong>同步传输</strong>（一连串的比特连续传送），此时，对信息字段采用<strong>零比特填充</strong>：</p>
+<ul>
+<li>发送端扫码整个信息字段，当发现存在 5 个连续的 1 时，在后面添加一个 0，保证不会存在 6 个 1（保证了信息字段中不可能存在 01111110 ，即标志字段）。</li>
+<li>接收方先确定帧边界，再讲信息字段中存在的 5 个连续的 1 后的 0 删去。</li>
+</ul>
+<h3 id="2-1-3-PPP协议的工作状态"><a href="#2-1-3-PPP协议的工作状态" class="headerlink" title="2.1.3 PPP协议的工作状态"></a>2.1.3 PPP协议的工作状态</h3><p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/DataLink/4.png" srcset="/img/loading.gif" alt=""></p>
+<ol>
+<li><strong>链路静止</strong>：ISP与用户电脑中不存在物理层连接；</li>
+<li><strong>链路建立</strong>：用户电脑通过调制解调器呼叫路由器，路由器检测到其发送的载波信号，建立物理层连接，从而实现建立链路层 LCP 连接；<em>（包含了物理层内容）</em></li>
+<li><strong>配置协商</strong>：建立链路后，协商<strong>配置选项</strong>（通过一方发送 LCP 配置请求帧 -&gt; PPP帧），而另一方可以响应：配置确认帧、配置否认帧、配置拒绝帧（无法识别部分选项或不能接受）。配置选项包括：最大帧长、鉴别协议、是否使用 PPP 帧中的地址和控制字段等；</li>
+<li><strong>鉴别</strong>：此时只允许传送 LCP 协议的分组、鉴别协议的分组、监测链路质量的分组。<br><strong>口令鉴别协议PAP</strong>：一方发送身份标识符和口令（即拨号时的账号与密码），可尝试若干次；<br><strong>口令握手鉴别协议CHAP</strong>：若鉴别失败，则<strong>链路终止</strong>，成功，进入<strong>网络层协议</strong>状态；</li>
+<li><strong>网络层协议</strong>：两端的网络控制协议NCP，根据网络层不同协议，相互交换网络层特定的网络控制分组，<em>（包含了网络层内容）</em><br>当运行的是IP协议时，配置IP协议模块时（例如分配IP地址），使用NCP中支持IP协议的 <strong>IP控制协议IPCP</strong>（封装成 PPP帧）；</li>
+<li><strong>链路打开</strong>：此时可两端可相互发送分组，并通过<strong>回送请求LCP分组</strong>和<strong>回送回答LCP分组</strong>检查链路状态（当发现链路故障时，也将转向链路终止）；</li>
+<li>通过一端发送<strong>终止请求LCP分组</strong>，另一端发送<strong>终止确认LCP分组</strong>，转到<strong>链路终止</strong>状态；</li>
+<li>当调制解调器停止发送载波时，则回到链路静止。</li>
+</ol>
+<h1 id="三、使用广播信道的数据链路层"><a href="#三、使用广播信道的数据链路层" class="headerlink" title="三、使用广播信道的数据链路层"></a>三、使用广播信道的数据链路层</h1><p>广播的方式是指通过向所有站点发送分组，从而传输信息。而广播信道的分配策略主要包括<strong>静态分配</strong>（预先规定频率或时隙，相互不干扰，包括<strong>频分多路复用</strong>和<strong>同步时分多路复用</strong>）和<strong>动态分配</strong>（本质属于异步时分复用，包括<strong>随机访问</strong>和<strong>控制访问</strong>）两大类。常见的采用广播方式传输分组信息的有：无线广播电台、局域网等。</p>
+<p>而对于广播链路中，主要需要解决多个发送和接收节点之间的协调问题（即多路访问问题），由于所有节点都可以发送帧，而接收节点可能同时接收到多个帧，即发生了<strong>碰撞</strong>。多路访问协议大致可以划分为：信道划分协议、随机接入协议、轮流协议。</p>
+<h2 id="3-1-信道划分协议"><a href="#3-1-信道划分协议" class="headerlink" title="3.1 信道划分协议"></a>3.1 信道划分协议</h2><p>信道划分协议一般有：频分复用FDM、时分复用TDM、波分复用、码分多址CDMA、统计时分复用STDM（属动态分配），在物理层中介绍过了，这里偷个懒ヽ(￣▽￣)ﾉ</p>
+<h2 id="3-2-随机接入协议"><a href="#3-2-随机接入协议" class="headerlink" title="3.2 随机接入协议"></a>3.2 随机接入协议</h2><p>在随机接入协议中，每个节点都可以用信道的全部速率发送分组，而当发生了碰撞时，节点将反复重发其帧（但不是马上，而会等待一个随机时延）。</p>
+<h3 id="a、时隙ALOHA"><a href="#a、时隙ALOHA" class="headerlink" title="a、时隙ALOHA"></a>a、时隙ALOHA</h3><p>假设信道的全部速率为 $R \ bps$ ，所有帧由 $L$ 比特或者更少比特组成，则将时间划分为 $L/R$ 秒的时隙（保证一个时隙可以传输一帧）。而每个节点都是同步的（保证了每个节点的时隙开始是一致的），而一个时隙中发生了帧碰撞，全部节点都将在该时隙结束前检测到该碰撞事件（保证发送节点下一次可以重发该帧，而不是发送下一帧）。</p>
+<p>设置一个概率 $p$，则当发生了碰撞时，该节点将以概率 $p$ 在每个时隙中重传该帧。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/DataLink/5.png" srcset="/img/loading.gif" alt=""></p>
+<p>假设共有 $N$ 个活跃节点需要通过共享信道发送分组，则一个指定节点成功传送的概率为 $p(1-p)^{N-1}$ ，而任意一个节点成功传送的概率为 $Np(1-p)^{N-1}$。</p>
+<p>当求出使其最大效率的 $p^<em>$ 时，令 $N$ 无穷大，可得<em>*效率</em></em>为 $1/e=0.37$，即成功时隙仅占总时隙的 $37$%。</p>
+<p>总得来说，时隙ALOHA满足了多路访问协议的<strong>简单</strong>、当只有一个活跃节点时其能有最大吞吐量的特性，但当节点增多时，其效率将快速下降，同时，其不能保证<strong>分散</strong>，因为每个节点都应对时隙同步。</p>
+<h3 id="b、ALOHA"><a href="#b、ALOHA" class="headerlink" title="b、ALOHA"></a>b、ALOHA</h3><p>相较于时隙ALOHA，纯ALOHA并不需要划分时隙，保证了完全分散。当节点检测到碰撞时，在保证传输完碰撞帧后，将立即概率 $p$ 重传该帧，若该次不重传，将等待一帧的传输时间，进行下一次重传判断。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/DataLink/6.png" srcset="/img/loading.gif" alt=""></p>
+<p>而一个指定节点能够在 $[t_0, t_0+1]$ 内能够成功发送分组，则需要其他节点不能在 $[t_0-1, t_0+1]$ 内都不开始传输分组，则概率为 $p(1-p)^{2(N-1)}$ ，求出概率为 $1/(2e)$ 。</p>
+<h3 id="c、载波侦听多路访问CSMA"><a href="#c、载波侦听多路访问CSMA" class="headerlink" title="c、载波侦听多路访问CSMA"></a>c、载波侦听多路访问CSMA</h3><p>CSMA中引入了<strong>载波侦听</strong>（一个节点在传输前先侦听信道）的概念。在理想状态下，CSMA进行了载波侦听后，将如同人说话之前先听是否有人说话一样，不会发送碰撞。但在现实生活中，存在<strong>信道传播时延</strong>，就可能发生碰撞。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/DataLink/7.jpg" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
+<h3 id="d、具有碰撞检测的载波侦听多路访问CSMA-CD"><a href="#d、具有碰撞检测的载波侦听多路访问CSMA-CD" class="headerlink" title="d、具有碰撞检测的载波侦听多路访问CSMA/CD"></a>d、具有碰撞检测的载波侦听多路访问CSMA/CD</h3><p>而由于每次发送碰撞后，节点都将发送完整个帧，导致存在时间浪费。因而在 CSMA/CD 中引入了<strong>碰撞检测</strong>的概念，当检测到发送碰撞后，节点都将立即停止分组的传输。而以太网采取的就是 CSMA/CD </p>
+<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/DataLink/8.jpg" srcset="/img/loading.gif" style="zoom:50%;" /></p>
+<p>而当发生碰撞后，CSMA 规定节点将等待一个随机时间量后再进行重传。这里选择了<strong>二进制指数退避算法</strong>：</p>
+<p>当第 $n$ 次重传时，节点随机从 ${0,1,2, \ldots, 2^n-1}$ 中随机选取一个 $K$ 值，作为等待时隙个数，即在 $K \cdot 2t$ 时间后再进行重传（$2t$ 为端到端的往返时间）；<br>为了限制其多次碰撞后增长速度过快，$n = Min[冲突次数, 10]$，即 $n$ 大于 $10$ 时，$n = 10$ ；<br>而为了防止链路故障或者其他导致多次冲突情况出现时，节点能够自动停止发送，设置当冲突次数超过 $16$ 次后，发送失败，丢弃传输的帧，发送错误报告。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/DataLink/9.png" srcset="/img/loading.gif" alt=""></p>
+<p><strong>CSMA/CD 的限制</strong>：由于CSMA/CD 采用的是<strong>边发送边检测</strong>的机制，为了令 $A$ 能够检测到在 $B$ 处发生的碰撞，应当满足条件：</p>
+<script type="math/tex; mode=display">
+\begin{align}
+L/R \ & \geq \ 2d_{max}/V \\
+\Longrightarrow L_{min}/R \ & = \ 2d_{max}/V \\
+\Longrightarrow L_{min}/R \ & = \ RTT_{max}
+\end{align}</script><p>其中 网络带宽：$R\ (bps)$ ，数据帧最小长度：$L<em>{min} \ (bits)$，信号传播速度：$V \ (m/s)$，$A \ B$ 两处即任意两处节点的最大距离： $d</em>{max} (m)$，由于一般情况下 $d<em>{max}$ 和 $V$ 的值是固定的，则信号传播最大往返时间 $RTT</em>{max}=2d_{max}/V$；</p>
+<p><strong>CSMA/CD 效率</strong>：采用 CSMA/CD 进行分组传输，当只有一个节点时，其能够以信道全速率进行传输。而当存在多个活跃节点有大量帧发送时，设 CSMA/CD 效率为 $\eta$ ，则其代表无碰撞传输的部分时间占总运行时间的份额。令 $d<em>{prop}$ 表示信号能量在任意两个适配器之间传播所需最大时间，而 $d</em>{trans}$ 表示传输一个最大长度的以太网帧的时间。则 ：</p>
+<script type="math/tex; mode=display">
+\eta = \frac1{1 + 5d_{prop}/d_{trans}}</script><h2 id="3-3-轮流协议"><a href="#3-3-轮流协议" class="headerlink" title="3.3 轮流协议"></a>3.3 轮流协议</h2><p>由于ALOHA和CSMA都只满足了 ①只有一个活跃节点时，该节点具有 $R \ bps$ 的吞吐量，而不能满足 ② 当有 $M$ 个活跃节点时，每个节点吞吐量接近 $R/M \ bps$。因此根据第二个特性创造了轮流协议。其包含两种比较重要的协议：<strong>轮询协议</strong>、<strong>令牌传递协议</strong>。</p>
+<p>轮询协议的应用：802.15协议、蓝牙协议</p>
+<p><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E4%BB%A4%E7%89%8C%E7%8E%AF">令牌传递协议</a>的应用：<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%85%89%E7%BA%A4%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E6%8E%A5%E5%8F%A3">光纤分布式数据接口（FDDI）协议</a>、IEEE 802.5 令牌环协议</p>
+<h1 id="四、交换局域网"><a href="#四、交换局域网" class="headerlink" title="四、交换局域网"></a>四、交换局域网</h1><h2 id="4-1-广播信道的应用：局域网"><a href="#4-1-广播信道的应用：局域网" class="headerlink" title="4.1 广播信道的应用：局域网"></a>4.1 广播信道的应用：局域网</h2><h2 id="4-2-以太网"><a href="#4-2-以太网" class="headerlink" title="4.2 以太网"></a>4.2 以太网</h2><h2 id="4-3-扩展的以太网"><a href="#4-3-扩展的以太网" class="headerlink" title="4.3 扩展的以太网"></a>4.3 扩展的以太网</h2><h1 id="五、数据链路层设备"><a href="#五、数据链路层设备" class="headerlink" title="五、数据链路层设备"></a>五、数据链路层设备</h1><h2 id="5-1-网卡"><a href="#5-1-网卡" class="headerlink" title="5.1 网卡"></a>5.1 网卡</h2><h2 id="5-2-网桥"><a href="#5-2-网桥" class="headerlink" title="5.2 网桥"></a>5.2 网桥</h2><h2 id="5-3-链路层交换机"><a href="#5-3-链路层交换机" class="headerlink" title="5.3 链路层交换机"></a>5.3 链路层交换机</h2><h1 id="六、参考文档"><a href="#六、参考文档" class="headerlink" title="六、参考文档"></a>六、参考文档</h1><p>关于BSC、SDLC、HDLC协议：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/52665008">https://zhuanlan.zhihu.com/p/52665008</a></p>
+
             </div>
             <hr>
             <div>
