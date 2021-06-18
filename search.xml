@@ -280,18 +280,6 @@ d_i = \frac{1}{M} \sum^M_{m = 1} Z^*_{i,m} \cdot c_m</script><h1 id="五、宽�
       </categories>
   </entry>
   <entry>
-    <title>网络层概述</title>
-    <url>/2021/06/17/network/network/</url>
-    <content><![CDATA[<blockquote>
-<p>网络层是OSI参考模型中的第三层，介于传输层和数据链路层之间，它在数据链路层提供的两个相邻端点之间的数据帧的传送功能上，进一步管理网络中的数据通信，将数据设法从源端经过若干个中间节点传送到目的端，从而向运输层提供最基本的端到端的数据传送服务。</p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>Computer Network</category>
-        <category>Network Layer</category>
-      </categories>
-  </entry>
-  <entry>
     <title>计网相关概率</title>
     <url>/2021/06/17/network/notion/</url>
     <content><![CDATA[<h1 id="计算机网络"><a href="#计算机网络" class="headerlink" title="计算机网络"></a>计算机网络</h1><p>信息时代的核心就是网络，而熟悉的网络有：<strong>电信网络</strong>、<strong>有线电视网</strong>络和<strong>计算机网络</strong>，而计算机网络中发展和影响最大的当属 <strong>Internet</strong>（译作因特网或互联网）。</p>
@@ -343,6 +331,18 @@ d_i = \frac{1}{M} \sum^M_{m = 1} Z^*_{i,m} \cdot c_m</script><h1 id="五、宽�
 ]]></content>
       <categories>
         <category>Computer Network</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>网络层概述</title>
+    <url>/2021/06/17/network/network/</url>
+    <content><![CDATA[<blockquote>
+<p>网络层是OSI参考模型中的第三层，介于传输层和数据链路层之间，它在数据链路层提供的两个相邻端点之间的数据帧的传送功能上，进一步管理网络中的数据通信，将数据设法从源端经过若干个中间节点传送到目的端，从而向运输层提供最基本的端到端的数据传送服务。</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>Computer Network</category>
+        <category>Network Layer</category>
       </categories>
   </entry>
   <entry>
