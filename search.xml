@@ -171,72 +171,6 @@
       </tags>
   </entry>
   <entry>
-    <title>网络层概述</title>
-    <url>/2021/06/17/network/network/</url>
-    <content><![CDATA[<blockquote>
-<p>网络层是OSI参考模型中的第三层，介于传输层和数据链路层之间，它在数据链路层提供的两个相邻端点之间的数据帧的传送功能上，进一步管理网络中的数据通信，将数据设法从源端经过若干个中间节点传送到目的端，从而向运输层提供最基本的端到端的数据传送服务。</p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>Computer Network</category>
-        <category>Network Layer</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>计网相关概率</title>
-    <url>/2021/06/17/network/notion/</url>
-    <content><![CDATA[<h1 id="计算机网络"><a href="#计算机网络" class="headerlink" title="计算机网络"></a>计算机网络</h1><p>信息时代的核心就是网络，而熟悉的网络有：<strong>电信网络</strong>、<strong>有线电视网</strong>络和<strong>计算机网络</strong>，而计算机网络中发展和影响最大的当属 <strong>Internet</strong>（译作因特网或互联网）。</p>
-<h2 id="互联网的组成"><a href="#互联网的组成" class="headerlink" title="互联网的组成"></a>互联网的组成</h2><p>计算机网络由<strong>节点结</strong>(node) 和<strong>链路</strong>(link) 组成，而<strong>互连网</strong>则是由多个网络与路由器组成的网络，而通过TCP/IP协议使得计算机都能通过互连网通信，就形成了<strong>互联网</strong>。（Internet为特指，而internet为泛指）</p>
-<p>而互联网主要划分为<strong>边缘部分</strong>（用户直接使用）和<strong>核心部分</strong>（为边缘部分提供服务）</p>
-<p>边缘部分：将接入互联网的设备称为<strong>主机</strong>或<strong>端系统</strong>，端系统通过<strong>因特网服务提供商（ISP）</strong>接入因特网，端系统之间一般通过<strong>C/S方式</strong>或者<strong>P2P方式</strong>进行通讯。</p>
-<p>接入网AN：端系统通过物理连接到<strong>边缘路由器</strong>形成的网络。</p>
-<p>核心部分：主要实现的功能是端系统之间数据的交换。其有两种方法：</p>
-<ul>
-<li><strong>分组交换</strong>：交换端系统之间的<strong>报文</strong>，对长报文划分为小报文，则为<strong>分组</strong>。而分组从发送源到目的地中除了经过通信链路，还需要经过<strong>分组交换机</strong>（包括<strong>路由器</strong>和<strong>链路交换机</strong>）。分组发送到路由器，而路由器获得分组后将通过目的地的IP地址和<strong>路由选择协议</strong>计算出分组将转发到哪条链路上。</li>
-<li><strong>电路交换</strong>：其在端系统之间建立一条专用的<strong>端对端连接</strong>，在通信结束前将一直占用资源（缓存，链路传输速率），而连接电路的实现是通过<strong>频分复用FDM</strong>或者<strong>时分复用TDM</strong>等来实现的，从而将物理链路划分为端系统之间专用的连接。</li>
-</ul>
-<h2 id="互联网的网络结构"><a href="#互联网的网络结构" class="headerlink" title="互联网的网络结构"></a>互联网的网络结构</h2><p><strong>互联网服务提供商ISP</strong>：将接入ISP的作为<strong>客户</strong>，而传输ISP作为<strong>提供商</strong>，三层ISP结构则一般指的是主干ISP（第一层），区域ISP，本地ISP。常见的第一层ISP有国内的中国电信、联通、移动、长城等与美国四大运营商等。不同的第一层ISP直接属于<strong>竞争</strong>关系，而除第一层ISP外，其他ISP可以采取<strong>多宿</strong>与多个提供商ISP连接，同时，相同等级结构的一对ISP能够进行<strong>对等</strong>，将其网络连接到一起从而免去之间的流量费用。</p>
-<p><strong>互联网交换点IXP</strong>：第三方客户可以创建一个IXP将多个ISP在此对等。</p>
-<p><strong>内容提供商网络</strong>：其通过建立专用的TCP/IP网络，独立于公共互联网，仅承载进入其服务器的流量，从而减少对顶层ISP支付的费用。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/notion/1.jpg" alt=""></p>
-<h1 id="时延、丢包与吞吐量"><a href="#时延、丢包与吞吐量" class="headerlink" title="时延、丢包与吞吐量"></a>时延、丢包与吞吐量</h1><p><strong>带宽</strong>：单位时间内某<strong>信道</strong>所能经过的<strong>最高数据率</strong>，单位为比特每秒 $bit/s$；</p>
-<p><strong>吞吐量</strong>：单位时间内通过某个网络（或信道、接口等）的<strong>实际数据量</strong>，其受到带宽的限制，常用每秒传输的比特($bit/s$)/字节数($byte/s$)/帧数表示；</p>
-<p><strong>时延</strong>：分组网络中比较重要的时延有：</p>
-<ul>
-<li><strong>处理时延</strong>：部分为路由器检查分组首部与确定分组导向链路所产生的时延；</li>
-<li><strong>排队时延</strong>：在队列中，在路由器中等待传输时产生的时延，对于特定分组，其排队时延取决于在其之前到达的正在等待传输的分组数量，若队列为空，且没有分组正在传输，则排队时延为0；</li>
-<li><strong>传输时延</strong>：将一个分组传输出路由器所需的时间，仅取决于分组长度 $L\ bit$ 与相邻路由器之间链路传输速率 $R\ bps\ (即b/s)$ ，则传输时延 $d_{trans}=L/R$ ；</li>
-<li><strong>传播时延</strong>：从链路起点到目的路由器所需时间，传播速率仅取决于该链路的物理媒体（即光纤、双绞铜线等），而传播时延仅取决于传播速率 $s$ 与两路由器之间的物理距离 $d$ ，$d_{prop} = d/s$；</li>
-<li>而总时延一般等于 $d<em>{nodal} = d</em>{proc} + d<em>{queue} + d</em>{trans} + d_{prop}$，</li>
-</ul>
-<p><strong>流量强度</strong>：用于估计排队时延的范围，用 $a\ pkt/s\ (即分组/秒)$ 表示分组到达队列的平均速率，$R$ 为传输速率，假定所有分组长度都为 $L\ bit$ ，则比特到达队列的平均速率为 $La\ bps$，假设队列无限大，流量强度则为 $La/R$。而当 $La/R&gt;1$ 时，队列中分组将无限增大。</p>
-<p><strong>丢包</strong>：由于路由器中缓存有限，即队列长度有限，则当队列填满时，将丢弃分组。</p>
-<p><em>PS：可通过 Traceroute （ Windows 下程序名为 tracert ）测量某目的地到本地主机中经过的路由器中发生的时延。</em></p>
-<h1 id="网络协议"><a href="#网络协议" class="headerlink" title="网络协议"></a>网络协议</h1><p>网络协议指的是计算机网络中互相通信的对等实体之间交换信息时所必须遵守的规则的集合。用于约定多个通信实体之间交换的报文格式和顺序，以及报文发送和/或接收一条报文或其他事件所采用的动作。</p>
-<h2 id="协议分层"><a href="#协议分层" class="headerlink" title="协议分层"></a>协议分层</h2><p>网络协议采用<strong>分层</strong>的体系结构，每层向上层提供<strong>服务</strong><br>优点： </p>
-<ol>
-<li>各层之间是独立的。某一层并不需要知道它下一层是如何实现的，而仅仅需要知道该层通过层间的接口所提供的服务。由于每一层只实现一种相对独立的功能，因而可以将一个难以处理的复杂问题分解为若干个较容易处理的更小问题，这样，整个问题的复杂度就下降了；</li>
-<li>灵活性好，可以降低层与层之间的依赖。当任何一层发生变化时，只要层间接口关系保持不变，则在这层以上或以下各层均不受影响，此外，对某一层提供的服务还可以进行修改。当某层提供的服务不再需要时，甚至可以将这层取消；</li>
-<li>结构上可分割开。各层都可以采用最合适的技术来实现；</li>
-<li>易于实现和维护。这种结构使得实现和调试一个庞大而又复杂的系统变得易于处理，因为整个系统已被分解为若干个相对独立的子系统；</li>
-<li>能促进标准化工作。因为每一层的功能及其所提供的服务都已有了精确的说明；</li>
-</ol>
-<p>缺点：</p>
-<ol>
-<li>可能会冗余较低层的功能；</li>
-<li>某层的功能需要其他层才出现的信息，违背层次分离目标；</li>
-</ol>
-<p>而各层所有协议称为<strong>协议栈</strong>，互联网的协议栈由5层组成，自顶向下依次为：<strong>应用层</strong>，<strong>传输层</strong>，<strong>网络层</strong>，<strong>数据链路层</strong>，<strong>物理层</strong>。而按照ISO划分的7层OSI模型的协议栈，将应用层拆分为应用层与<strong>表示层</strong>，传输层拆分为<strong>会话层</strong>与传输层。</p>
-<h2 id="数据封装"><a href="#数据封装" class="headerlink" title="数据封装"></a>数据封装</h2><p>数据封装（Data Encapsulation）是指将协议数据单元（PDU）封装在一组协议头和尾中的过程。在5层网络模型中，发送端经历了：<strong>应用层报文</strong>作为数据传输到传输层，传输层在其首部加上控制信息（例如TCP的报文头），与应用层报文一起构成<strong>运输层报文段</strong>，网络层接收到报文段后在其首部添加上源和目的端地址等网络层首部信息（IP头部）构成<strong>网络层数据报</strong>（包），而数据链路层再将其作为数据，并在其首尾添加MAC头部与尾部构成<strong>链路层帧</strong>，最后将帧交给物理层，物理层将其转换为比特流进行传输。</p>
-<p>对于每一层，一个分组由首部字段与<strong>有效荷载字段</strong>构成，有效荷载通常为来自上一层的分组。</p>
-<p>接收端从下往上，依次去除对应层的附加信息，并将数据部分传递给上一层。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/notion/2.jpg" alt=""></p>
-]]></content>
-      <categories>
-        <category>Computer Network</category>
-      </categories>
-  </entry>
-  <entry>
     <title>物理层概述</title>
     <url>/2021/04/19/network/Frame/</url>
     <content><![CDATA[<blockquote>
@@ -342,7 +276,60 @@ d_i = \frac{1}{M} \sum^M_{m = 1} Z^*_{i,m} \cdot c_m</script><h1 id="五、宽�
 ]]></content>
       <categories>
         <category>Computer Network</category>
-        <category>Physical Layer</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>计网相关概率</title>
+    <url>/2021/06/17/network/notion/</url>
+    <content><![CDATA[<h1 id="计算机网络"><a href="#计算机网络" class="headerlink" title="计算机网络"></a>计算机网络</h1><p>信息时代的核心就是网络，而熟悉的网络有：<strong>电信网络</strong>、<strong>有线电视网</strong>络和<strong>计算机网络</strong>，而计算机网络中发展和影响最大的当属 <strong>Internet</strong>（译作因特网或互联网）。</p>
+<h2 id="互联网的组成"><a href="#互联网的组成" class="headerlink" title="互联网的组成"></a>互联网的组成</h2><p>计算机网络由<strong>节点结</strong>(node) 和<strong>链路</strong>(link) 组成，而<strong>互连网</strong>则是由多个网络与路由器组成的网络，而通过TCP/IP协议使得计算机都能通过互连网通信，就形成了<strong>互联网</strong>。（Internet为特指，而internet为泛指）</p>
+<p>而互联网主要划分为<strong>边缘部分</strong>（用户直接使用）和<strong>核心部分</strong>（为边缘部分提供服务）</p>
+<p>边缘部分：将接入互联网的设备称为<strong>主机</strong>或<strong>端系统</strong>，端系统通过<strong>因特网服务提供商（ISP）</strong>接入因特网，端系统之间一般通过<strong>C/S方式</strong>或者<strong>P2P方式</strong>进行通讯。</p>
+<p>接入网AN：端系统通过物理连接到<strong>边缘路由器</strong>形成的网络。</p>
+<p>核心部分：主要实现的功能是端系统之间数据的交换。其有两种方法：</p>
+<ul>
+<li><strong>分组交换</strong>：交换端系统之间的<strong>报文</strong>，对长报文划分为小报文，则为<strong>分组</strong>。而分组从发送源到目的地中除了经过通信链路，还需要经过<strong>分组交换机</strong>（包括<strong>路由器</strong>和<strong>链路交换机</strong>）。分组发送到路由器，而路由器获得分组后将通过目的地的IP地址和<strong>路由选择协议</strong>计算出分组将转发到哪条链路上。</li>
+<li><strong>电路交换</strong>：其在端系统之间建立一条专用的<strong>端对端连接</strong>，在通信结束前将一直占用资源（缓存，链路传输速率），而连接电路的实现是通过<strong>频分复用FDM</strong>或者<strong>时分复用TDM</strong>等来实现的，从而将物理链路划分为端系统之间专用的连接。</li>
+</ul>
+<h2 id="互联网的网络结构"><a href="#互联网的网络结构" class="headerlink" title="互联网的网络结构"></a>互联网的网络结构</h2><p><strong>互联网服务提供商ISP</strong>：将接入ISP的作为<strong>客户</strong>，而传输ISP作为<strong>提供商</strong>，三层ISP结构则一般指的是主干ISP（第一层），区域ISP，本地ISP。常见的第一层ISP有国内的中国电信、联通、移动、长城等与美国四大运营商等。不同的第一层ISP直接属于<strong>竞争</strong>关系，而除第一层ISP外，其他ISP可以采取<strong>多宿</strong>与多个提供商ISP连接，同时，相同等级结构的一对ISP能够进行<strong>对等</strong>，将其网络连接到一起从而免去之间的流量费用。</p>
+<p><strong>互联网交换点IXP</strong>：第三方客户可以创建一个IXP将多个ISP在此对等。</p>
+<p><strong>内容提供商网络</strong>：其通过建立专用的TCP/IP网络，独立于公共互联网，仅承载进入其服务器的流量，从而减少对顶层ISP支付的费用。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/notion/1.jpg" alt=""></p>
+<h1 id="时延、丢包与吞吐量"><a href="#时延、丢包与吞吐量" class="headerlink" title="时延、丢包与吞吐量"></a>时延、丢包与吞吐量</h1><p><strong>带宽</strong>：单位时间内某<strong>信道</strong>所能经过的<strong>最高数据率</strong>，单位为比特每秒 $bit/s$；</p>
+<p><strong>吞吐量</strong>：单位时间内通过某个网络（或信道、接口等）的<strong>实际数据量</strong>，其受到带宽的限制，常用每秒传输的比特($bit/s$)/字节数($byte/s$)/帧数表示；</p>
+<p><strong>时延</strong>：分组网络中比较重要的时延有：</p>
+<ul>
+<li><strong>处理时延</strong>：部分为路由器检查分组首部与确定分组导向链路所产生的时延；</li>
+<li><strong>排队时延</strong>：在队列中，在路由器中等待传输时产生的时延，对于特定分组，其排队时延取决于在其之前到达的正在等待传输的分组数量，若队列为空，且没有分组正在传输，则排队时延为0；</li>
+<li><strong>传输时延</strong>：将一个分组传输出路由器所需的时间，仅取决于分组长度 $L\ bit$ 与相邻路由器之间链路传输速率 $R\ bps\ (即b/s)$ ，则传输时延 $d_{trans}=L/R$ ；</li>
+<li><strong>传播时延</strong>：从链路起点到目的路由器所需时间，传播速率仅取决于该链路的物理媒体（即光纤、双绞铜线等），而传播时延仅取决于传播速率 $s$ 与两路由器之间的物理距离 $d$ ，$d_{prop} = d/s$；</li>
+<li>而总时延一般等于 $d<em>{nodal} = d</em>{proc} + d<em>{queue} + d</em>{trans} + d_{prop}$，</li>
+</ul>
+<p><strong>流量强度</strong>：用于估计排队时延的范围，用 $a\ pkt/s\ (即分组/秒)$ 表示分组到达队列的平均速率，$R$ 为传输速率，假定所有分组长度都为 $L\ bit$ ，则比特到达队列的平均速率为 $La\ bps$，假设队列无限大，流量强度则为 $La/R$。而当 $La/R&gt;1$ 时，队列中分组将无限增大。</p>
+<p><strong>丢包</strong>：由于路由器中缓存有限，即队列长度有限，则当队列填满时，将丢弃分组。</p>
+<p><em>PS：可通过 Traceroute （ Windows 下程序名为 tracert ）测量某目的地到本地主机中经过的路由器中发生的时延。</em></p>
+<h1 id="网络协议"><a href="#网络协议" class="headerlink" title="网络协议"></a>网络协议</h1><p>网络协议指的是计算机网络中互相通信的对等实体之间交换信息时所必须遵守的规则的集合。用于约定多个通信实体之间交换的报文格式和顺序，以及报文发送和/或接收一条报文或其他事件所采用的动作。</p>
+<h2 id="协议分层"><a href="#协议分层" class="headerlink" title="协议分层"></a>协议分层</h2><p>网络协议采用<strong>分层</strong>的体系结构，每层向上层提供<strong>服务</strong><br>优点： </p>
+<ol>
+<li>各层之间是独立的。某一层并不需要知道它下一层是如何实现的，而仅仅需要知道该层通过层间的接口所提供的服务。由于每一层只实现一种相对独立的功能，因而可以将一个难以处理的复杂问题分解为若干个较容易处理的更小问题，这样，整个问题的复杂度就下降了；</li>
+<li>灵活性好，可以降低层与层之间的依赖。当任何一层发生变化时，只要层间接口关系保持不变，则在这层以上或以下各层均不受影响，此外，对某一层提供的服务还可以进行修改。当某层提供的服务不再需要时，甚至可以将这层取消；</li>
+<li>结构上可分割开。各层都可以采用最合适的技术来实现；</li>
+<li>易于实现和维护。这种结构使得实现和调试一个庞大而又复杂的系统变得易于处理，因为整个系统已被分解为若干个相对独立的子系统；</li>
+<li>能促进标准化工作。因为每一层的功能及其所提供的服务都已有了精确的说明；</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>可能会冗余较低层的功能；</li>
+<li>某层的功能需要其他层才出现的信息，违背层次分离目标；</li>
+</ol>
+<p>而各层所有协议称为<strong>协议栈</strong>，互联网的协议栈由5层组成，自顶向下依次为：<strong>应用层</strong>，<strong>传输层</strong>，<strong>网络层</strong>，<strong>数据链路层</strong>，<strong>物理层</strong>。而按照ISO划分的7层OSI模型的协议栈，将应用层拆分为应用层与<strong>表示层</strong>，传输层拆分为<strong>会话层</strong>与传输层。</p>
+<h2 id="数据封装"><a href="#数据封装" class="headerlink" title="数据封装"></a>数据封装</h2><p>数据封装（Data Encapsulation）是指将协议数据单元（PDU）封装在一组协议头和尾中的过程。在5层网络模型中，发送端经历了：<strong>应用层报文</strong>作为数据传输到传输层，传输层在其首部加上控制信息（例如TCP的报文头），与应用层报文一起构成<strong>运输层报文段</strong>，网络层接收到报文段后在其首部添加上源和目的端地址等网络层首部信息（IP头部）构成<strong>网络层数据报</strong>（包），而数据链路层再将其作为数据，并在其首尾添加MAC头部与尾部构成<strong>链路层帧</strong>，最后将帧交给物理层，物理层将其转换为比特流进行传输。</p>
+<p>对于每一层，一个分组由首部字段与<strong>有效荷载字段</strong>构成，有效荷载通常为来自上一层的分组。</p>
+<p>接收端从下往上，依次去除对应层的附加信息，并将数据部分传递给上一层。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/notion/2.jpg" alt=""></p>
+]]></content>
+      <categories>
+        <category>Computer Network</category>
       </categories>
   </entry>
   <entry>
@@ -447,8 +434,6 @@ d_i = \frac{1}{M} \sum^M_{m = 1} Z^*_{i,m} \cdot c_m</script><h1 id="五、宽�
 <a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>]]></content>
       <categories>
         <category>Computer Network</category>
-        <category>Transport Layer</category>
-        <category>TCP</category>
       </categories>
       <tags>
         <tag>TCP</tag>
@@ -603,7 +588,6 @@ L/R \ & \geq \ 2d_{max}/V \\
 ]]></content>
       <categories>
         <category>Computer Network</category>
-        <category>Data Link Layer</category>
       </categories>
   </entry>
 </search>
