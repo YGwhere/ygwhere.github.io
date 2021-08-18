@@ -1,0 +1,530 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/favicon.png">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  
+    <meta name="description" content="To live is to risk it all">
+  
+  <meta name="author" content="YGwhere">
+  <meta name="keywords" content="">
+  
+  <title>进程 - YGwhere&#39;s blogs</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"ygwhere.github.io","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>YGwhere</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/frame/banner_img.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="进程">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-08-18 20:23" pubdate>
+        2021年8月18日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.7k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      21
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">进程</h1>
+            
+            <div class="markdown-body">
+              <h1 id="进程管理"><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h1><h2 id="PCB"><a href="#PCB" class="headerlink" title="PCB"></a>PCB</h2><p>PCB（Process Control Block）进程控制块，在linux中实现的数据结构为task_struct</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">task_struct</span> &#123;</span><br>	<span class="hljs-keyword">volatile</span> <span class="hljs-keyword">long</span> state;	<span class="hljs-comment">/* -1 unrunnable, 0 runnable, &gt;0 stopped */</span><br>	<span class="hljs-keyword">void</span> *<span class="hljs-built_in">stack</span>;<br>	<span class="hljs-keyword">atomic_t</span> usage;<br>	<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> flags;	<span class="hljs-comment">/* per process flags, defined below */</span><br>	<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> ptrace;<br>    <br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">list_head</span> <span class="hljs-title">tasks</span>;</span><br>    <br>    <span class="hljs-keyword">pid_t</span> pid;<br>	<span class="hljs-keyword">pid_t</span> tgid;<br>    <br>    <span class="hljs-comment">/* </span><br><span class="hljs-comment">	 * pointers to (original) parent process, youngest child, younger sibling,</span><br><span class="hljs-comment">	 * older sibling, respectively.  (p-&gt;father can be replaced with </span><br><span class="hljs-comment">	 * p-&gt;real_parent-&gt;pid)</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">task_struct</span> *<span class="hljs-title">real_parent</span>;</span> <span class="hljs-comment">/* real parent process */</span><br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">task_struct</span> *<span class="hljs-title">parent</span>;</span> <span class="hljs-comment">/* recipient of SIGCHLD, wait4() reports */</span><br>    <br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">     * list_head是一个双向循环链表，在linux中定义的内核数据结构</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">list_head</span> <span class="hljs-title">children</span>;</span>	<span class="hljs-comment">/* list of my children */</span><br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">list_head</span> <span class="hljs-title">sibling</span>;</span>	<span class="hljs-comment">/* linkage in my parent&#x27;s children list */</span><br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">task_struct</span> *<span class="hljs-title">group_leader</span>;</span>	<span class="hljs-comment">/* threadgroup leader */</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="Linux0-11"><a href="#Linux0-11" class="headerlink" title="Linux0.11"></a>Linux0.11</h3><p>在linux0.11中，task_struct记录了全部的信息，因此通过task_union包装了task_struct和stack(内存分页有关)</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* 作为一页内存，定义任务的内核堆栈结构 */</span><br><span class="hljs-class"><span class="hljs-keyword">union</span> <span class="hljs-title">task_union</span> &#123;</span><br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">task_struct</span> <span class="hljs-title">task</span>;</span>  <span class="hljs-comment">/* 将PCB存放在栈底 */</span><br>	<span class="hljs-keyword">char</span> <span class="hljs-built_in">stack</span>[PAGE_SIZE];<br>&#125;;<br></code></pre></td></tr></table></figure>
+<h3 id="Liunx2-6"><a href="#Liunx2-6" class="headerlink" title="Liunx2.6"></a>Liunx2.6</h3><p>而Linux2.6.0中，task_struct被包含在thread_union中，其中包含了thread_info和stack，通过thread_info中task指针访问task_struct，从而将频繁访问的thread_info存放在内核栈中，而将task_struct将由<strong><em>slab分配器</em></strong>动态生成，防止占用进程的内核栈</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">thread_info</span> &#123;</span><br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">task_struct</span>	*<span class="hljs-title">task</span>;</span>		<span class="hljs-comment">/* main task structure */</span><br>    ...<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">union</span> <span class="hljs-title">thread_union</span> &#123;</span><br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">thread_info</span> <span class="hljs-title">thread_info</span>;</span><br>	<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> <span class="hljs-built_in">stack</span>[THREAD_SIZE/<span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">long</span>)];<br>&#125;;<br></code></pre></td></tr></table></figure>
+<h2 id="进程的状态"><a href="#进程的状态" class="headerlink" title="进程的状态"></a>进程的状态</h2><p>Linux2.6设置了五种进程状态</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* 进程状态 */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TASK_RUNNING		0   <span class="hljs-comment">// 进程可执行</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TASK_INTERRUPTIBLE	1	<span class="hljs-comment">// 正在睡眠，可中断(可被其他信号量唤醒)</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TASK_UNINTERRUPTIBLE	2	<span class="hljs-comment">// 不可中断(不接受SIGKILL信号，即不可kill)</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> __TASK_STOPPED		4	<span class="hljs-comment">// 进程停止执行</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> __TASK_TRACED		8	<span class="hljs-comment">// 被其他进程跟踪进程，进程暂停，等待跟踪进程对其进行操作</span></span><br><br><span class="hljs-comment">/* in tsk-&gt;exit_state */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> EXIT_ZOMBIE		16		<span class="hljs-comment">// 父进程使用waitpid()，等待子进程结束，并在其结束时发送SIGHLD信号，使其称为EXIT_ZOMBIE，处理信号后变为EXIT_DEAD(若父进程忽略退出信号，则将一直处于EXIT_ZOMBIE)，直接删除task_struct，并不过渡为僵尸进程</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> EXIT_DEAD		32</span><br><br><span class="hljs-comment">/* in tsk-&gt;state again */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TASK_DEAD		64		<span class="hljs-comment">// 僵尸进程，子进程退出调用exit()，仅保留task_struct，等待父进程调用wait()从而删除task_struct，若父进程退出时未调用wait清理，将过继给init进程进行清理</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TASK_WAKEKILL		128</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TASK_WAKING		256</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TASK_STATE_MAX		512</span><br></code></pre></td></tr></table></figure>
+<h3 id="设置进程状态"><a href="#设置进程状态" class="headerlink" title="设置进程状态"></a>设置进程状态</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> set_task_state(tsk, state_value)		\</span><br>	set_mb((tsk)-&gt;state, (state_value))<br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> set_current_state(state_value)		\</span><br>	set_mb(current-&gt;state, (state_value))<br></code></pre></td></tr></table></figure>
+<h2 id="进程创建"><a href="#进程创建" class="headerlink" title="进程创建"></a>进程创建</h2><p>Unix产生进程的方式并不是通过单一函数实现，而是分为fork和exec函数实现，fork通过拷贝当前进程（仅PID与PPID及部分资源的统计量不同），exec读取子进程的可执行文件并载入地址空间开始运行</p>
+<p>Linux采用<strong>写时拷贝页</strong>，并不直接在开始复制整个进程地址空间，而是让父子进程以<strong>只读</strong>方式共享<strong>同一拷贝</strong>，在需要写入时才开始复制数据。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs apl">进程的创建：<br>fork、vfork、__clone 通过clone()系统调用:<br>-&gt; do_fork<br> 	-&gt; copy_process<br> 		-&gt; dup_task_struck : 创建一个内核栈、thread_info结构、task_struct，且值与父进程相同<br> 		-&gt; 判断目前用户是否超过分配资源的限制<br> 		-&gt; p-&gt;state &#x3D; TASK_UNINTERRUPTIBLE : 保证当前该子进程不会投入运行<br> 		-&gt; copy_flags : 更新task_struct::flags，清空进程的超级用户权限<br> 		-&gt; alloc_pidmap : 为子进程分配有效PID<br> 		-&gt; 根据参数标志选择拷贝或共享资源<br> 		-&gt; 扫尾工作并返回子进程指针<br> 	-&gt; 返回 PID<br>-&gt; 直接调用exec，执行子进程，避免父进程写入，直接开始写时拷贝<br><br>vfork比fork相比，不拷贝父进程的页表项，即不适用父进程的内存资源，作为一个独立线程运行<br></code></pre></td></tr></table></figure>
+<h3 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h3><p>而对于Linux，将所有的线程当做进程来实现，线程作为一个与其他进程共享某些资源的进程。</p>
+<p>而Liunx创建线程与调用fork类似，通过clone（系统调用）参数实现父子进程共享地址空间、文件系统资源、文件描述符、信号处理程序。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">long</span> <span class="hljs-title">sys_clone</span><span class="hljs-params">(<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> clone_flags, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> newsp,</span></span><br><span class="hljs-function"><span class="hljs-params">	  <span class="hljs-keyword">void</span> __user *parent_tid, <span class="hljs-keyword">void</span> __user *child_tid, struct pt_regs *regs)</span></span>;<br><br>其中clone_flags可以通过 | 指定多个，其决定了创建子进程的方式和父子进程之间共享的资源种类，通过修改其可以创建线程:<br>clone(CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND, <span class="hljs-number">0</span>);<br><br>普通fork() : clone(CLONE_SIGHAND, <span class="hljs-number">0</span>);<br>vfork() : clone(CLONE_VFORK | CLONE_VM | CLONE_SIGHAND, <span class="hljs-number">0</span>);<br></code></pre></td></tr></table></figure>
+<h3 id="内核级线程"><a href="#内核级线程" class="headerlink" title="内核级线程"></a>内核级线程</h3><p>通过<code>kthreadd</code>内核<u>进程</u>创建新内核<u>线程</u>，内核线程没有独立的地址空间(<code>task_struct::mm=Null</code>)，使用kernel_thread函数创建，周期性执行，像：网络连接的维护等。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// 创建内核线程，创建后处于不可运行状态</span><br><span class="hljs-function">struct task_struct *<span class="hljs-title">kthread_create</span><span class="hljs-params">(<span class="hljs-keyword">int</span> (*threadfn)(<span class="hljs-keyword">void</span> *data),</span></span><br><span class="hljs-function"><span class="hljs-params">				   <span class="hljs-keyword">void</span> *data,</span></span><br><span class="hljs-function"><span class="hljs-params">				   <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> namefmt[],</span></span><br><span class="hljs-function"><span class="hljs-params">				   ...)</span></span>;<br><span class="hljs-comment">// 唤醒进程</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">wake_up_process</span><span class="hljs-params">(struct task_struct *p)</span></span>;<br><span class="hljs-comment">// 实现创建进程并启动</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> kthread_run(threadfn, data, namefmt, ...)			   \</span><br>(&#123;									   \<br>	struct task_struct *__k						   \<br>		= kthread_create(threadfn, data, namefmt, ## __VA_ARGS__); \<br>	<span class="hljs-keyword">if</span> (!IS_ERR(__k))						   \<br>		wake_up_process(__k);					   \<br>	__k;								   \<br>&#125;)<br><span class="hljs-comment">// 内核线程启动后知道do_exit()或其他内核部分调用kthread_stop退出</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">kthread_stop</span><span class="hljs-params">(struct task_struct *k)</span> <span class="hljs-comment">// k为kthread_create所获得值，即PCB的地址</span></span><br></code></pre></td></tr></table></figure>
+<h4 id="特殊内核进程"><a href="#特殊内核进程" class="headerlink" title="特殊内核进程"></a>特殊内核进程</h4><p><strong>进程0</strong>：闲逛进程，由内核初始化时的start_kernel函数创建的内核进程swap，PID=0，执行的事cpu_idle函数（只有hlt汇编指令），使系统闲置时减少电量消耗与热产生。</p>
+<p><strong>进程1</strong>：init进程，首先初始化为内核线程kernel_init，然后使用execve系统调用，装入用户态下的可执行文件init（/sbin/init），init为一个由内核进程启动的普通进程，处于用户态下的第一个进程，且永不停止。</p>
+<h2 id="进程终结"><a href="#进程终结" class="headerlink" title="进程终结"></a>进程终结</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apl">进程的结束：依靠do_exit(), include\linux\exit.c    -&gt; struct task_struct *tsk &#x3D; current : 获得当前进程的PCB地址    -&gt; tsk-&gt;flags |&#x3D; PF_EXITING    -&gt; del_timer_sync(&amp;tsk-&gt;real_timer) : 删除该进程的内核定时器    -&gt; __exit_mm(tsk);exit_sem(tsk);__exit_files(tsk);__exit_fs(tsk);exit_namespace(tsk);exit_itimers(tsk);exit_thread() : 释放占用资源    -&gt; exit_notify : 想父进程发送信号，给结束进程的子进程寻找养父 &#x3D; 线程组中其他线程&#x2F;init进程，并修改task_struct::exit_state &#x3D; EXIT_ZOMBIE    -&gt; schedule : 切换到新进程，并永不返回到 do_exit函数中此时存在唯一目的就是向父进程提供信息而进程终结时的清理工作与进程描述符PCB的删除被分开执行，当exit后为僵死状态，PCB还没删除，无法用kill杀死，只能通过父进程调用wait对其进行清理，而每次wait只能回收一个子进程。当生成孤儿进程时，在父进程退出的do_exit函数中调用的exit_notify函数，调用了forget_original_parent，为子进程设置新的父进程，同时为ptrace设置新的父进程（ptrace : 使得父进程可以观察和控制子进程的执行过程）<br></code></pre></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/OS/">OS</a>
+                    
+                  </div>
+                
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/08/18/os/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">进程调度</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/06/17/network/notion/">
+                        <span class="hidden-mobile">计网相关概率</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>
