@@ -171,85 +171,6 @@
       </tags>
   </entry>
   <entry>
-    <title>进程</title>
-    <url>/2021/08/18/os/%E8%BF%9B%E7%A8%8B/</url>
-    <content><![CDATA[<h1 id="进程管理"><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h1><h2 id="PCB"><a href="#PCB" class="headerlink" title="PCB"></a>PCB</h2><p>PCB（Process Control Block）进程控制块，在linux中实现的数据结构为task_struct</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">task_struct</span> &#123;</span><br>	<span class="hljs-keyword">volatile</span> <span class="hljs-keyword">long</span> state;	<span class="hljs-comment">/* -1 unrunnable, 0 runnable, &gt;0 stopped */</span><br>	<span class="hljs-keyword">void</span> *<span class="hljs-built_in">stack</span>;<br>	<span class="hljs-keyword">atomic_t</span> usage;<br>	<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> flags;	<span class="hljs-comment">/* per process flags, defined below */</span><br>	<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> ptrace;<br>    <br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">list_head</span> <span class="hljs-title">tasks</span>;</span><br>    <br>    <span class="hljs-keyword">pid_t</span> pid;<br>	<span class="hljs-keyword">pid_t</span> tgid;<br>    <br>    <span class="hljs-comment">/* </span><br><span class="hljs-comment">	 * pointers to (original) parent process, youngest child, younger sibling,</span><br><span class="hljs-comment">	 * older sibling, respectively.  (p-&gt;father can be replaced with </span><br><span class="hljs-comment">	 * p-&gt;real_parent-&gt;pid)</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">task_struct</span> *<span class="hljs-title">real_parent</span>;</span> <span class="hljs-comment">/* real parent process */</span><br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">task_struct</span> *<span class="hljs-title">parent</span>;</span> <span class="hljs-comment">/* recipient of SIGCHLD, wait4() reports */</span><br>    <br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">     * list_head是一个双向循环链表，在linux中定义的内核数据结构</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">list_head</span> <span class="hljs-title">children</span>;</span>	<span class="hljs-comment">/* list of my children */</span><br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">list_head</span> <span class="hljs-title">sibling</span>;</span>	<span class="hljs-comment">/* linkage in my parent&#x27;s children list */</span><br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">task_struct</span> *<span class="hljs-title">group_leader</span>;</span>	<span class="hljs-comment">/* threadgroup leader */</span><br>&#125;<br></code></pre></td></tr></table></figure>
-<h3 id="Linux0-11"><a href="#Linux0-11" class="headerlink" title="Linux0.11"></a>Linux0.11</h3><p>在linux0.11中，task_struct记录了全部的信息，因此通过task_union包装了task_struct和stack(内存分页有关)</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* 作为一页内存，定义任务的内核堆栈结构 */</span><br><span class="hljs-class"><span class="hljs-keyword">union</span> <span class="hljs-title">task_union</span> &#123;</span><br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">task_struct</span> <span class="hljs-title">task</span>;</span>  <span class="hljs-comment">/* 将PCB存放在栈底 */</span><br>	<span class="hljs-keyword">char</span> <span class="hljs-built_in">stack</span>[PAGE_SIZE];<br>&#125;;<br></code></pre></td></tr></table></figure>
-<h3 id="Liunx2-6"><a href="#Liunx2-6" class="headerlink" title="Liunx2.6"></a>Liunx2.6</h3><p>而Linux2.6.0中，task_struct被包含在thread_union中，其中包含了thread_info和stack，通过thread_info中task指针访问task_struct，从而将频繁访问的thread_info存放在内核栈中，而将task_struct将由<strong><em>slab分配器</em></strong>动态生成，防止占用进程的内核栈</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">thread_info</span> &#123;</span><br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">task_struct</span>	*<span class="hljs-title">task</span>;</span>		<span class="hljs-comment">/* main task structure */</span><br>    ...<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">union</span> <span class="hljs-title">thread_union</span> &#123;</span><br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">thread_info</span> <span class="hljs-title">thread_info</span>;</span><br>	<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> <span class="hljs-built_in">stack</span>[THREAD_SIZE/<span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">long</span>)];<br>&#125;;<br></code></pre></td></tr></table></figure>
-<h2 id="进程的状态"><a href="#进程的状态" class="headerlink" title="进程的状态"></a>进程的状态</h2><p>Linux2.6设置了五种进程状态</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* 进程状态 */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TASK_RUNNING		0   <span class="hljs-comment">// 进程可执行</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TASK_INTERRUPTIBLE	1	<span class="hljs-comment">// 正在睡眠，可中断(可被其他信号量唤醒)</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TASK_UNINTERRUPTIBLE	2	<span class="hljs-comment">// 不可中断(不接受SIGKILL信号，即不可kill)</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> __TASK_STOPPED		4	<span class="hljs-comment">// 进程停止执行</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> __TASK_TRACED		8	<span class="hljs-comment">// 被其他进程跟踪进程，进程暂停，等待跟踪进程对其进行操作</span></span><br><br><span class="hljs-comment">/* in tsk-&gt;exit_state */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> EXIT_ZOMBIE		16		<span class="hljs-comment">// 父进程使用waitpid()，等待子进程结束，并在其结束时发送SIGHLD信号，使其称为EXIT_ZOMBIE，处理信号后变为EXIT_DEAD(若父进程忽略退出信号，则将一直处于EXIT_ZOMBIE)，直接删除task_struct，并不过渡为僵尸进程</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> EXIT_DEAD		32</span><br><br><span class="hljs-comment">/* in tsk-&gt;state again */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TASK_DEAD		64		<span class="hljs-comment">// 僵尸进程，子进程退出调用exit()，仅保留task_struct，等待父进程调用wait()从而删除task_struct，若父进程退出时未调用wait清理，将过继给init进程进行清理</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TASK_WAKEKILL		128</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TASK_WAKING		256</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TASK_STATE_MAX		512</span><br></code></pre></td></tr></table></figure>
-<h3 id="设置进程状态"><a href="#设置进程状态" class="headerlink" title="设置进程状态"></a>设置进程状态</h3><figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> set_task_state(tsk, state_value)		\</span><br>	set_mb((tsk)-&gt;state, (state_value))<br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> set_current_state(state_value)		\</span><br>	set_mb(current-&gt;state, (state_value))<br></code></pre></td></tr></table></figure>
-<h2 id="进程创建"><a href="#进程创建" class="headerlink" title="进程创建"></a>进程创建</h2><p>Unix产生进程的方式并不是通过单一函数实现，而是分为fork和exec函数实现，fork通过拷贝当前进程（仅PID与PPID及部分资源的统计量不同），exec读取子进程的可执行文件并载入地址空间开始运行</p>
-<p>Linux采用<strong>写时拷贝页</strong>，并不直接在开始复制整个进程地址空间，而是让父子进程以<strong>只读</strong>方式共享<strong>同一拷贝</strong>，在需要写入时才开始复制数据。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs apl">进程的创建：<br>fork、vfork、__clone 通过clone()系统调用:<br>-&gt; do_fork<br> 	-&gt; copy_process<br> 		-&gt; dup_task_struck : 创建一个内核栈、thread_info结构、task_struct，且值与父进程相同<br> 		-&gt; 判断目前用户是否超过分配资源的限制<br> 		-&gt; p-&gt;state &#x3D; TASK_UNINTERRUPTIBLE : 保证当前该子进程不会投入运行<br> 		-&gt; copy_flags : 更新task_struct::flags，清空进程的超级用户权限<br> 		-&gt; alloc_pidmap : 为子进程分配有效PID<br> 		-&gt; 根据参数标志选择拷贝或共享资源<br> 		-&gt; 扫尾工作并返回子进程指针<br> 	-&gt; 返回 PID<br>-&gt; 直接调用exec，执行子进程，避免父进程写入，直接开始写时拷贝<br><br>vfork比fork相比，不拷贝父进程的页表项，即不适用父进程的内存资源，作为一个独立线程运行<br></code></pre></td></tr></table></figure>
-<h3 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h3><p>而对于Linux，将所有的线程当做进程来实现，线程作为一个与其他进程共享某些资源的进程。</p>
-<p>而Liunx创建线程与调用fork类似，通过clone（系统调用）参数实现父子进程共享地址空间、文件系统资源、文件描述符、信号处理程序。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">long</span> <span class="hljs-title">sys_clone</span><span class="hljs-params">(<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> clone_flags, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> newsp,</span></span><br><span class="hljs-function"><span class="hljs-params">	  <span class="hljs-keyword">void</span> __user *parent_tid, <span class="hljs-keyword">void</span> __user *child_tid, struct pt_regs *regs)</span></span>;<br><br>其中clone_flags可以通过 | 指定多个，其决定了创建子进程的方式和父子进程之间共享的资源种类，通过修改其可以创建线程:<br>clone(CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND, <span class="hljs-number">0</span>);<br><br>普通fork() : clone(CLONE_SIGHAND, <span class="hljs-number">0</span>);<br>vfork() : clone(CLONE_VFORK | CLONE_VM | CLONE_SIGHAND, <span class="hljs-number">0</span>);<br></code></pre></td></tr></table></figure>
-<h3 id="内核级线程"><a href="#内核级线程" class="headerlink" title="内核级线程"></a>内核级线程</h3><p>通过<code>kthreadd</code>内核<u>进程</u>创建新内核<u>线程</u>，内核线程没有独立的地址空间(<code>task_struct::mm=Null</code>)，使用kernel_thread函数创建，周期性执行，像：网络连接的维护等。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// 创建内核线程，创建后处于不可运行状态</span><br><span class="hljs-function">struct task_struct *<span class="hljs-title">kthread_create</span><span class="hljs-params">(<span class="hljs-keyword">int</span> (*threadfn)(<span class="hljs-keyword">void</span> *data),</span></span><br><span class="hljs-function"><span class="hljs-params">				   <span class="hljs-keyword">void</span> *data,</span></span><br><span class="hljs-function"><span class="hljs-params">				   <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> namefmt[],</span></span><br><span class="hljs-function"><span class="hljs-params">				   ...)</span></span>;<br><span class="hljs-comment">// 唤醒进程</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">wake_up_process</span><span class="hljs-params">(struct task_struct *p)</span></span>;<br><span class="hljs-comment">// 实现创建进程并启动</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> kthread_run(threadfn, data, namefmt, ...)			   \</span><br>(&#123;									   \<br>	struct task_struct *__k						   \<br>		= kthread_create(threadfn, data, namefmt, ## __VA_ARGS__); \<br>	<span class="hljs-keyword">if</span> (!IS_ERR(__k))						   \<br>		wake_up_process(__k);					   \<br>	__k;								   \<br>&#125;)<br><span class="hljs-comment">// 内核线程启动后知道do_exit()或其他内核部分调用kthread_stop退出</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">kthread_stop</span><span class="hljs-params">(struct task_struct *k)</span> <span class="hljs-comment">// k为kthread_create所获得值，即PCB的地址</span></span><br></code></pre></td></tr></table></figure>
-<h4 id="特殊内核进程"><a href="#特殊内核进程" class="headerlink" title="特殊内核进程"></a>特殊内核进程</h4><p><strong>进程0</strong>：闲逛进程，由内核初始化时的start_kernel函数创建的内核进程swap，PID=0，执行的事cpu_idle函数（只有hlt汇编指令），使系统闲置时减少电量消耗与热产生。</p>
-<p><strong>进程1</strong>：init进程，首先初始化为内核线程kernel_init，然后使用execve系统调用，装入用户态下的可执行文件init（/sbin/init），init为一个由内核进程启动的普通进程，处于用户态下的第一个进程，且永不停止。</p>
-<h2 id="进程终结"><a href="#进程终结" class="headerlink" title="进程终结"></a>进程终结</h2><figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs apl">进程的结束：依靠do_exit(), include\linux\exit.c    -&gt; struct task_struct *tsk &#x3D; current : 获得当前进程的PCB地址    -&gt; tsk-&gt;flags |&#x3D; PF_EXITING    -&gt; del_timer_sync(&amp;tsk-&gt;real_timer) : 删除该进程的内核定时器    -&gt; __exit_mm(tsk);exit_sem(tsk);__exit_files(tsk);__exit_fs(tsk);exit_namespace(tsk);exit_itimers(tsk);exit_thread() : 释放占用资源    -&gt; exit_notify : 想父进程发送信号，给结束进程的子进程寻找养父 &#x3D; 线程组中其他线程&#x2F;init进程，并修改task_struct::exit_state &#x3D; EXIT_ZOMBIE    -&gt; schedule : 切换到新进程，并永不返回到 do_exit函数中此时存在唯一目的就是向父进程提供信息而进程终结时的清理工作与进程描述符PCB的删除被分开执行，当exit后为僵死状态，PCB还没删除，无法用kill杀死，只能通过父进程调用wait对其进行清理，而每次wait只能回收一个子进程。当生成孤儿进程时，在父进程退出的do_exit函数中调用的exit_notify函数，调用了forget_original_parent，为子进程设置新的父进程，同时为ptrace设置新的父进程（ptrace : 使得父进程可以观察和控制子进程的执行过程）<br></code></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>OS</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>进程调度</title>
-    <url>/2021/08/18/os/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/</url>
-    <content><![CDATA[<h1 id="进程调度"><a href="#进程调度" class="headerlink" title="进程调度"></a>进程调度</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>批处理系统与多任务系统：最初的系统为批处理系统，由于<strong>IO约束型任务</strong>与<strong>CPU约束型任务</strong>都是依次执行，造成CPU的利用率低下，从而发展称为多任务系统。在单处理器机上，执行到IO约束型任务时，可以通过调度算法实现切出，而IO结束后，再通过信号切入，充分利用CPU。</p>
-<p>而由于多用户系统的出现，需要实现多个进程同时执行，在Linux下，采用<strong>抢占式多任务</strong>，通过系统的调度程序对进程实现强制挂起（抢占），而对于单个程序在抢占前能占用CPU的时间称为<strong>时间片</strong>。（非抢占多任务：除非进程自行停止，否则将一直执行）</p>
-<h2 id="分析调度算法"><a href="#分析调度算法" class="headerlink" title="分析调度算法"></a>分析调度算法</h2><p>调度算法的评估：响应时间、吞吐量（完成任务量）</p>
-<p>响应时间小 -&gt; 切换次数增多 -&gt; 系统内耗大 -&gt; 吞吐量小</p>
-<p>一般情况下，Linux会更倾向于调度IO约束型任务，缩短响应时间，提升用户体验</p>
-<p>批处理系统调度:</p>
-<ul>
-<li>FCFS先来先服务</li>
-<li>SJF短作业优先 ： 保证了响应时间小</li>
-</ul>
-<p>交互式系统调度:</p>
-<ul>
-<li>RR时间片轮转调度 ： 设置时间片，时间片大-&gt;响应时间长 | 时间片小-&gt;吞吐量小，一般时间片默认设置为10ms，同时引入了进程切换(批处理中每次处理一个任务，非抢占式，因此没有进程概念)</li>
-<li><p>优先级调度PSA</p>
-</li>
-<li><p>高响应比优先HRRN：前台RR，后台SJF，任务优先级应动态调整，能够调整CPU时间保证后台程序能充分应用CPU，同时要以轮转调度为核心，保证前台响应（Linux0.11）</p>
-</li>
-<li>多级反馈队列调度</li>
-<li>O(1)调度器（Linux2.5）</li>
-<li>公平分享调度算法 -&gt; 完全公平调度算法CFS（Linux2.6）</li>
-</ul>
-<h2 id="Linux0-11中进程调度的实现"><a href="#Linux0-11中进程调度的实现" class="headerlink" title="Linux0.11中进程调度的实现"></a>Linux0.11中进程调度的实现</h2><figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">schedule</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">int</span> i,next,c;<br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">task_struct</span> ** <span class="hljs-title">p</span>;</span><br>    <br>    ... <span class="hljs-comment">/* 检查中断 */</span><br>        <br>    <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>) &#123;<br>		c = <span class="hljs-number">-1</span>;<br>		next = <span class="hljs-number">0</span>;<br>		i = NR_TASKS;<br>		<span class="hljs-comment">/* PCB数组末尾，下面有判断为空 */</span><br>		p = &amp;task[NR_TASKS];<br>		<span class="hljs-keyword">while</span> (--i) &#123;<br>			<span class="hljs-keyword">if</span> (!*--p)<br>				<span class="hljs-keyword">continue</span>;<br>			<span class="hljs-comment">/* 求就绪态下的进程：c=最大counter(时间片)，i=PCB数组索引 */</span><br>			<span class="hljs-keyword">if</span> ((*p)-&gt;state == TASK_RUNNING &amp;&amp; (*p)-&gt;counter &gt; c)<br>				c = (*p)-&gt;counter, next = i;<br>		&#125;<br>		<span class="hljs-comment">/* 找到就绪态下具有最大时间片的进程 */</span><br>		<span class="hljs-keyword">if</span> (c) <span class="hljs-keyword">break</span>;<br>		<span class="hljs-comment">/* 未找到，则设置counter */</span><br>		<span class="hljs-keyword">for</span>(p = &amp;LAST_TASK ; p &gt; &amp;FIRST_TASK ; --p)<br>			<span class="hljs-keyword">if</span> (*p)<br>			<span class="hljs-comment">/*</span><br><span class="hljs-comment">			 * 当counter=0的就绪态线程，则counter=counter/2+counter的初值，即重置counter</span><br><span class="hljs-comment">			 * 当counter!=0的非就绪态线程，counter*=1.5，重新进入就绪态后，counter将上升，优先级提升</span><br><span class="hljs-comment">			 * 此处counter承担了时间片&amp;&amp;优先级的作用</span><br><span class="hljs-comment">			 */</span><br>				(*p)-&gt;counter = ((*p)-&gt;counter &gt;&gt; <span class="hljs-number">1</span>) +<br>						(*p)-&gt;priority;<br>	&#125;<br>	switch_to(next); <span class="hljs-comment">//具体实现看下文：进程切换</span><br>&#125;<br></code></pre></td></tr></table></figure>
-<p>counter响应时间有界证明：</p>
-<script type="math/tex; mode=display">
-\begin{align*}
-c(0) & = p \\
-c(1) & = \frac{c(0)}{2} + p = \frac{p}{2} + p \\
-c(2) & = \frac{c(1)}{2} + p = \frac{p}{4} + \frac{p}{2} + p \\
-& \ldots \\
-c(x) & = p + \frac{p}{2} + \frac{p}{4} + \cdots + \frac{p}{x} \\
-     & \leq 2p &\text{c(x)收敛}
-\end{align*}</script><h2 id="CFS"><a href="#CFS" class="headerlink" title="CFS"></a>CFS</h2><h2 id="进程切换"><a href="#进程切换" class="headerlink" title="进程切换"></a>进程切换</h2><h3 id="用户态进入内核态"><a href="#用户态进入内核态" class="headerlink" title="用户态进入内核态"></a>用户态进入内核态</h3><p>当执行<code>int 0x80</code> 这条语句时由用户态进入内核态时，CPU会自动按照<strong>SS、ESP、EFLAGS、CS、EIP</strong>的顺序，将这几个寄存器的值压入到内核栈中，由于执行<code>int 0x80</code>时还未进入内核，所以压入内核栈的这五个寄存器的值是用户态时的值。</p>
-<p><code>switch_to</code>实现两个内核栈的切换，对于线程来说就是切换TCB，对于进程就是切换PCB，同时修改内存映射表。</p>
-<h3 id="TSS切换-lt-span-class-”hint—top-hint—rounded”-aria-label-”x86体系下linux中的任务切换与TSS：https-blog-csdn-net-dog250-article-details-6203529"><a href="#TSS切换-lt-span-class-”hint—top-hint—rounded”-aria-label-”x86体系下linux中的任务切换与TSS：https-blog-csdn-net-dog250-article-details-6203529" class="headerlink" title="TSS切换&lt;span class=”hint—top hint—rounded” aria-label=”x86体系下linux中的任务切换与TSS：https://blog.csdn.net/dog250/article/details/6203529"></a>TSS切换<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote">&lt;span class=”hint—top hint—rounded” aria-label=”x86体系下linux中的任务切换与TSS：<a href="https://blog.csdn.net/dog250/article/details/6203529">https://blog.csdn.net/dog250/article/details/6203529</a></h3><p>“&gt;[1]&lt;/span&gt;&lt;/a&gt;&lt;/sup&gt;</p>
-<p>Linux0.11中采用的是 <strong>TSS 切换进程</strong>：</p>
-<p>TSS<sup id="fnref:2" class="footnote-ref"><a href="#fn:2" rel="footnote"><span class="hint--top hint--rounded" aria-label="任务状态段（Task State Segment）: https://wizardforcel.gitbooks.io/intel-80386-ref-manual/content/26.html
-">[2]</span></a></sup>是什么：tss是一个段，段是x86的概念，在保护模式下，段选择符参与寻址，段选择符在段寄存器中，而tss段则在tr寄存器中。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* </span><br><span class="hljs-comment"> * switch_to函数在Linux0.11中的实现</span><br><span class="hljs-comment"> * 此处 switch_to 基于intel提供的TSS机制</span><br><span class="hljs-comment"> * 此处 switch_to 仅接收一个参数 n</span><br><span class="hljs-comment"> * 用于判断第n个tss段，从gdt表中查询tss描述符对应的tss段，将tss中保存的全部寄存器的备份恢复</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> switch_to(n) &#123;\</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> &#123;</span><span class="hljs-keyword">long</span> a,b;&#125; __tmp; \<br>__asm__(<span class="hljs-string">&quot;cmpl %%ecx,_current\n\t&quot;</span> \<br>	<span class="hljs-string">&quot;je 1f\n\t&quot;</span> \<br>	<span class="hljs-string">&quot;movw %%dx,%1\n\t&quot;</span> \<br>	<span class="hljs-string">&quot;xchgl %%ecx,_current\n\t&quot;</span> \<br>	<span class="hljs-string">&quot;ljmp %0\n\t&quot;</span> \  <span class="hljs-comment">// %0 -&gt; _TSS(n) </span><br>	<span class="hljs-string">&quot;cmpl %%ecx,_last_task_used_math\n\t&quot;</span> \<br>	<span class="hljs-string">&quot;jne 1f\n\t&quot;</span> \<br>	<span class="hljs-string">&quot;clts\n&quot;</span> \<br>	<span class="hljs-string">&quot;1:&quot;</span> \<br>	::<span class="hljs-string">&quot;m&quot;</span> (*&amp;__tmp.a),<span class="hljs-string">&quot;m&quot;</span> (*&amp;__tmp.b), \<br>	<span class="hljs-string">&quot;d&quot;</span> (_TSS(n)),<span class="hljs-string">&quot;c&quot;</span> ((<span class="hljs-keyword">long</span>) task[n])); \  <span class="hljs-comment">// task为PCB数组</span><br>&#125;<br></code></pre></td></tr></table></figure>
-<h3 id="内核栈切换"><a href="#内核栈切换" class="headerlink" title="内核栈切换"></a>内核栈切换</h3><p>Linux让每个CPU使用唯一一个tss段，tr寄存器一直指向该tss段，此时，寄存器值将在切换前先压入内核栈，然后再切换内核栈，tss并不保存寄存器，仅使用tss中的esp0指向运行时进程的内核栈。切换回原进程时，先通过PCB查询esp，赋值给tss的esp字段，切换内核栈后，再将之前压栈的寄存器值出栈，恢复原进程上下文。</p>
-<p>从而使得cpu不必切换tr寄存器，节约时间。</p>
-<p>具体切换：通过PCB寻找到内核栈指针esp，然后使用ret通过esp切换到另一个内核栈，将之前压栈的寄存器都出栈，再使用iret通过CS:PC切回到另一个用户进程，并通过SS:SP切换到对应用户栈。</p>
-<h2 id="阅读文档"><a href="#阅读文档" class="headerlink" title="阅读文档"></a>阅读文档</h2><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>x86体系下linux中的任务切换与TSS：<a href="https://blog.csdn.net/dog250/article/details/6203529">https://blog.csdn.net/dog250/article/details/6203529</a>
-<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span>任务状态段（Task State Segment）: <a href="https://wizardforcel.gitbooks.io/intel-80386-ref-manual/content/26.html">https://wizardforcel.gitbooks.io/intel-80386-ref-manual/content/26.html</a>
-<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>]]></content>
-      <categories>
-        <category>OS</category>
-      </categories>
-  </entry>
-  <entry>
     <title>物理层概述</title>
     <url>/2021/04/19/network/Frame/</url>
     <content><![CDATA[<blockquote>
@@ -355,6 +276,88 @@ d_i = \frac{1}{M} \sum^M_{m = 1} Z^*_{i,m} \cdot c_m</script><h1 id="五、宽�
 ]]></content>
       <categories>
         <category>Computer Network</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>计网相关概率</title>
+    <url>/2021/06/17/network/notion/</url>
+    <content><![CDATA[<h1 id="计算机网络"><a href="#计算机网络" class="headerlink" title="计算机网络"></a>计算机网络</h1><p>信息时代的核心就是网络，而熟悉的网络有：<strong>电信网络</strong>、<strong>有线电视网</strong>络和<strong>计算机网络</strong>，而计算机网络中发展和影响最大的当属 <strong>Internet</strong>（译作因特网或互联网）。</p>
+<h2 id="互联网的组成"><a href="#互联网的组成" class="headerlink" title="互联网的组成"></a>互联网的组成</h2><p>计算机网络由<strong>节点结</strong>(node) 和<strong>链路</strong>(link) 组成，而<strong>互连网</strong>则是由多个网络与路由器组成的网络，而通过TCP/IP协议使得计算机都能通过互连网通信，就形成了<strong>互联网</strong>。（Internet为特指，而internet为泛指）</p>
+<p>而互联网主要划分为<strong>边缘部分</strong>（用户直接使用）和<strong>核心部分</strong>（为边缘部分提供服务）</p>
+<p>边缘部分：将接入互联网的设备称为<strong>主机</strong>或<strong>端系统</strong>，端系统通过<strong>因特网服务提供商（ISP）</strong>接入因特网，端系统之间一般通过<strong>C/S方式</strong>或者<strong>P2P方式</strong>进行通讯。</p>
+<p>接入网AN：端系统通过物理连接到<strong>边缘路由器</strong>形成的网络。</p>
+<p>核心部分：主要实现的功能是端系统之间数据的交换。其有两种方法：</p>
+<ul>
+<li><strong>分组交换</strong>：交换端系统之间的<strong>报文</strong>，对长报文划分为小报文，则为<strong>分组</strong>。而分组从发送源到目的地中除了经过通信链路，还需要经过<strong>分组交换机</strong>（包括<strong>路由器</strong>和<strong>链路交换机</strong>）。分组发送到路由器，而路由器获得分组后将通过目的地的IP地址和<strong>路由选择协议</strong>计算出分组将转发到哪条链路上。</li>
+<li><strong>电路交换</strong>：其在端系统之间建立一条专用的<strong>端对端连接</strong>，在通信结束前将一直占用资源（缓存，链路传输速率），而连接电路的实现是通过<strong>频分复用FDM</strong>或者<strong>时分复用TDM</strong>等来实现的，从而将物理链路划分为端系统之间专用的连接。</li>
+</ul>
+<h2 id="互联网的网络结构"><a href="#互联网的网络结构" class="headerlink" title="互联网的网络结构"></a>互联网的网络结构</h2><p><strong>互联网服务提供商ISP</strong>：将接入ISP的作为<strong>客户</strong>，而传输ISP作为<strong>提供商</strong>，三层ISP结构则一般指的是主干ISP（第一层），区域ISP，本地ISP。常见的第一层ISP有国内的中国电信、联通、移动、长城等与美国四大运营商等。不同的第一层ISP直接属于<strong>竞争</strong>关系，而除第一层ISP外，其他ISP可以采取<strong>多宿</strong>与多个提供商ISP连接，同时，相同等级结构的一对ISP能够进行<strong>对等</strong>，将其网络连接到一起从而免去之间的流量费用。</p>
+<p><strong>互联网交换点IXP</strong>：第三方客户可以创建一个IXP将多个ISP在此对等。</p>
+<p><strong>内容提供商网络</strong>：其通过建立专用的TCP/IP网络，独立于公共互联网，仅承载进入其服务器的流量，从而减少对顶层ISP支付的费用。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/notion/1.jpg" alt=""></p>
+<h1 id="时延、丢包与吞吐量"><a href="#时延、丢包与吞吐量" class="headerlink" title="时延、丢包与吞吐量"></a>时延、丢包与吞吐量</h1><p><strong>带宽</strong>：单位时间内某<strong>信道</strong>所能经过的<strong>最高数据率</strong>，单位为比特每秒 $bit/s$；</p>
+<p><strong>吞吐量</strong>：单位时间内通过某个网络（或信道、接口等）的<strong>实际数据量</strong>，其受到带宽的限制，常用每秒传输的比特($bit/s$)/字节数($byte/s$)/帧数表示；</p>
+<p><strong>时延</strong>：分组网络中比较重要的时延有：</p>
+<ul>
+<li><strong>处理时延</strong>：部分为路由器检查分组首部与确定分组导向链路所产生的时延；</li>
+<li><strong>排队时延</strong>：在队列中，在路由器中等待传输时产生的时延，对于特定分组，其排队时延取决于在其之前到达的正在等待传输的分组数量，若队列为空，且没有分组正在传输，则排队时延为0；</li>
+<li><strong>传输时延</strong>：将一个分组传输出路由器所需的时间，仅取决于分组长度 $L\ bit$ 与相邻路由器之间链路传输速率 $R\ bps\ (即b/s)$ ，则传输时延 $d_{trans}=L/R$ ；</li>
+<li><strong>传播时延</strong>：从链路起点到目的路由器所需时间，传播速率仅取决于该链路的物理媒体（即光纤、双绞铜线等），而传播时延仅取决于传播速率 $s$ 与两路由器之间的物理距离 $d$ ，$d_{prop} = d/s$；</li>
+<li>而总时延一般等于 $d<em>{nodal} = d</em>{proc} + d<em>{queue} + d</em>{trans} + d_{prop}$，</li>
+</ul>
+<p><strong>流量强度</strong>：用于估计排队时延的范围，用 $a\ pkt/s\ (即分组/秒)$ 表示分组到达队列的平均速率，$R$ 为传输速率，假定所有分组长度都为 $L\ bit$ ，则比特到达队列的平均速率为 $La\ bps$，假设队列无限大，流量强度则为 $La/R$。而当 $La/R&gt;1$ 时，队列中分组将无限增大。</p>
+<p><strong>丢包</strong>：由于路由器中缓存有限，即队列长度有限，则当队列填满时，将丢弃分组。</p>
+<p><em>PS：可通过 Traceroute （ Windows 下程序名为 tracert ）测量某目的地到本地主机中经过的路由器中发生的时延。</em></p>
+<h1 id="网络协议"><a href="#网络协议" class="headerlink" title="网络协议"></a>网络协议</h1><p>网络协议指的是计算机网络中互相通信的对等实体之间交换信息时所必须遵守的规则的集合。用于约定多个通信实体之间交换的报文格式和顺序，以及报文发送和/或接收一条报文或其他事件所采用的动作。</p>
+<h2 id="协议分层"><a href="#协议分层" class="headerlink" title="协议分层"></a>协议分层</h2><p>网络协议采用<strong>分层</strong>的体系结构，每层向上层提供<strong>服务</strong><br>优点： </p>
+<ol>
+<li>各层之间是独立的。某一层并不需要知道它下一层是如何实现的，而仅仅需要知道该层通过层间的接口所提供的服务。由于每一层只实现一种相对独立的功能，因而可以将一个难以处理的复杂问题分解为若干个较容易处理的更小问题，这样，整个问题的复杂度就下降了；</li>
+<li>灵活性好，可以降低层与层之间的依赖。当任何一层发生变化时，只要层间接口关系保持不变，则在这层以上或以下各层均不受影响，此外，对某一层提供的服务还可以进行修改。当某层提供的服务不再需要时，甚至可以将这层取消；</li>
+<li>结构上可分割开。各层都可以采用最合适的技术来实现；</li>
+<li>易于实现和维护。这种结构使得实现和调试一个庞大而又复杂的系统变得易于处理，因为整个系统已被分解为若干个相对独立的子系统；</li>
+<li>能促进标准化工作。因为每一层的功能及其所提供的服务都已有了精确的说明；</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>可能会冗余较低层的功能；</li>
+<li>某层的功能需要其他层才出现的信息，违背层次分离目标；</li>
+</ol>
+<p>而各层所有协议称为<strong>协议栈</strong>，互联网的协议栈由5层组成，自顶向下依次为：<strong>应用层</strong>，<strong>传输层</strong>，<strong>网络层</strong>，<strong>数据链路层</strong>，<strong>物理层</strong>。而按照ISO划分的7层OSI模型的协议栈，将应用层拆分为应用层与<strong>表示层</strong>，传输层拆分为<strong>会话层</strong>与传输层。</p>
+<h2 id="数据封装"><a href="#数据封装" class="headerlink" title="数据封装"></a>数据封装</h2><p>数据封装（Data Encapsulation）是指将协议数据单元（PDU）封装在一组协议头和尾中的过程。在5层网络模型中，发送端经历了：<strong>应用层报文</strong>作为数据传输到传输层，传输层在其首部加上控制信息（例如TCP的报文头），与应用层报文一起构成<strong>运输层报文段</strong>，网络层接收到报文段后在其首部添加上源和目的端地址等网络层首部信息（IP头部）构成<strong>网络层数据报</strong>（包），而数据链路层再将其作为数据，并在其首尾添加MAC头部与尾部构成<strong>链路层帧</strong>，最后将帧交给物理层，物理层将其转换为比特流进行传输。</p>
+<p>对于每一层，一个分组由首部字段与<strong>有效荷载字段</strong>构成，有效荷载通常为来自上一层的分组。</p>
+<p>接收端从下往上，依次去除对应层的附加信息，并将数据部分传递给上一层。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/notion/2.jpg" alt=""></p>
+]]></content>
+      <categories>
+        <category>Computer Network</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>进程</title>
+    <url>/2021/08/18/os/%E8%BF%9B%E7%A8%8B/</url>
+    <content><![CDATA[<h1 id="进程管理"><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h1><h2 id="PCB"><a href="#PCB" class="headerlink" title="PCB"></a>PCB</h2><p>PCB（Process Control Block）进程控制块，在linux中实现的数据结构为task_struct</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">task_struct</span> &#123;</span><br>	<span class="hljs-keyword">volatile</span> <span class="hljs-keyword">long</span> state;	<span class="hljs-comment">/* -1 unrunnable, 0 runnable, &gt;0 stopped */</span><br>	<span class="hljs-keyword">void</span> *<span class="hljs-built_in">stack</span>;<br>	<span class="hljs-keyword">atomic_t</span> usage;<br>	<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> flags;	<span class="hljs-comment">/* per process flags, defined below */</span><br>	<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> ptrace;<br>    <br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">list_head</span> <span class="hljs-title">tasks</span>;</span><br>    <br>    <span class="hljs-keyword">pid_t</span> pid;<br>	<span class="hljs-keyword">pid_t</span> tgid;<br>    <br>    <span class="hljs-comment">/* </span><br><span class="hljs-comment">	 * pointers to (original) parent process, youngest child, younger sibling,</span><br><span class="hljs-comment">	 * older sibling, respectively.  (p-&gt;father can be replaced with </span><br><span class="hljs-comment">	 * p-&gt;real_parent-&gt;pid)</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">task_struct</span> *<span class="hljs-title">real_parent</span>;</span> <span class="hljs-comment">/* real parent process */</span><br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">task_struct</span> *<span class="hljs-title">parent</span>;</span> <span class="hljs-comment">/* recipient of SIGCHLD, wait4() reports */</span><br>    <br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">     * list_head是一个双向循环链表，在linux中定义的内核数据结构</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">list_head</span> <span class="hljs-title">children</span>;</span>	<span class="hljs-comment">/* list of my children */</span><br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">list_head</span> <span class="hljs-title">sibling</span>;</span>	<span class="hljs-comment">/* linkage in my parent&#x27;s children list */</span><br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">task_struct</span> *<span class="hljs-title">group_leader</span>;</span>	<span class="hljs-comment">/* threadgroup leader */</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="Linux0-11"><a href="#Linux0-11" class="headerlink" title="Linux0.11"></a>Linux0.11</h3><p>在linux0.11中，task_struct记录了全部的信息，因此通过task_union包装了task_struct和stack(内存分页有关)</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* 作为一页内存，定义任务的内核堆栈结构 */</span><br><span class="hljs-class"><span class="hljs-keyword">union</span> <span class="hljs-title">task_union</span> &#123;</span><br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">task_struct</span> <span class="hljs-title">task</span>;</span>  <span class="hljs-comment">/* 将PCB存放在栈底 */</span><br>	<span class="hljs-keyword">char</span> <span class="hljs-built_in">stack</span>[PAGE_SIZE];<br>&#125;;<br></code></pre></td></tr></table></figure>
+<h3 id="Liunx2-6"><a href="#Liunx2-6" class="headerlink" title="Liunx2.6"></a>Liunx2.6</h3><p>而Linux2.6.0中，task_struct被包含在thread_union中，其中包含了thread_info和stack，通过thread_info中task指针访问task_struct，从而将频繁访问的thread_info存放在内核栈中，而将task_struct将由<strong><em>slab分配器</em></strong>动态生成，防止占用进程的内核栈</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">thread_info</span> &#123;</span><br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">task_struct</span>	*<span class="hljs-title">task</span>;</span>		<span class="hljs-comment">/* main task structure */</span><br>    ...<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">union</span> <span class="hljs-title">thread_union</span> &#123;</span><br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">thread_info</span> <span class="hljs-title">thread_info</span>;</span><br>	<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> <span class="hljs-built_in">stack</span>[THREAD_SIZE/<span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">long</span>)];<br>&#125;;<br></code></pre></td></tr></table></figure>
+<h2 id="进程的状态"><a href="#进程的状态" class="headerlink" title="进程的状态"></a>进程的状态</h2><p>Linux2.6设置了五种进程状态</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* 进程状态 */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TASK_RUNNING		0   <span class="hljs-comment">// 进程可执行</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TASK_INTERRUPTIBLE	1	<span class="hljs-comment">// 正在睡眠，可中断(可被其他信号量唤醒)</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TASK_UNINTERRUPTIBLE	2	<span class="hljs-comment">// 不可中断(不接受SIGKILL信号，即不可kill)</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> __TASK_STOPPED		4	<span class="hljs-comment">// 进程停止执行</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> __TASK_TRACED		8	<span class="hljs-comment">// 被其他进程跟踪进程，进程暂停，等待跟踪进程对其进行操作</span></span><br><br><span class="hljs-comment">/* in tsk-&gt;exit_state */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> EXIT_ZOMBIE		16		<span class="hljs-comment">// 父进程使用waitpid()，等待子进程结束，并在其结束时发送SIGHLD信号，使其称为EXIT_ZOMBIE，处理信号后变为EXIT_DEAD(若父进程忽略退出信号，则将一直处于EXIT_ZOMBIE)，直接删除task_struct，并不过渡为僵尸进程</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> EXIT_DEAD		32</span><br><br><span class="hljs-comment">/* in tsk-&gt;state again */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TASK_DEAD		64		<span class="hljs-comment">// 僵尸进程，子进程退出调用exit()，仅保留task_struct，等待父进程调用wait()从而删除task_struct，若父进程退出时未调用wait清理，将过继给init进程进行清理</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TASK_WAKEKILL		128</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TASK_WAKING		256</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TASK_STATE_MAX		512</span><br></code></pre></td></tr></table></figure>
+<h3 id="设置进程状态"><a href="#设置进程状态" class="headerlink" title="设置进程状态"></a>设置进程状态</h3><figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> set_task_state(tsk, state_value)		\</span><br>	set_mb((tsk)-&gt;state, (state_value))<br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> set_current_state(state_value)		\</span><br>	set_mb(current-&gt;state, (state_value))<br></code></pre></td></tr></table></figure>
+<h2 id="进程创建"><a href="#进程创建" class="headerlink" title="进程创建"></a>进程创建</h2><p>Unix产生进程的方式并不是通过单一函数实现，而是分为fork和exec函数实现，fork通过拷贝当前进程（仅PID与PPID及部分资源的统计量不同），exec读取子进程的可执行文件并载入地址空间开始运行</p>
+<p>Linux采用<strong>写时拷贝页</strong>，并不直接在开始复制整个进程地址空间，而是让父子进程以<strong>只读</strong>方式共享<strong>同一拷贝</strong>，在需要写入时才开始复制数据。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs apl">进程的创建：<br>fork、vfork、__clone 通过clone()系统调用:<br>-&gt; do_fork<br> 	-&gt; copy_process<br> 		-&gt; dup_task_struck : 创建一个内核栈、thread_info结构、task_struct，且值与父进程相同<br> 		-&gt; 判断目前用户是否超过分配资源的限制<br> 		-&gt; p-&gt;state &#x3D; TASK_UNINTERRUPTIBLE : 保证当前该子进程不会投入运行<br> 		-&gt; copy_flags : 更新task_struct::flags，清空进程的超级用户权限<br> 		-&gt; alloc_pidmap : 为子进程分配有效PID<br> 		-&gt; 根据参数标志选择拷贝或共享资源<br> 		-&gt; 扫尾工作并返回子进程指针<br> 	-&gt; 返回 PID<br>-&gt; 直接调用exec，执行子进程，避免父进程写入，直接开始写时拷贝<br><br>vfork比fork相比，不拷贝父进程的页表项，即不适用父进程的内存资源，作为一个独立线程运行<br></code></pre></td></tr></table></figure>
+<h3 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h3><p>而对于Linux，将所有的线程当做进程来实现，线程作为一个与其他进程共享某些资源的进程。</p>
+<p>而Liunx创建线程与调用fork类似，通过clone（系统调用）参数实现父子进程共享地址空间、文件系统资源、文件描述符、信号处理程序。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">long</span> <span class="hljs-title">sys_clone</span><span class="hljs-params">(<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> clone_flags, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> newsp,</span></span><br><span class="hljs-function"><span class="hljs-params">	  <span class="hljs-keyword">void</span> __user *parent_tid, <span class="hljs-keyword">void</span> __user *child_tid, struct pt_regs *regs)</span></span>;<br><br>其中clone_flags可以通过 | 指定多个，其决定了创建子进程的方式和父子进程之间共享的资源种类，通过修改其可以创建线程:<br>clone(CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND, <span class="hljs-number">0</span>);<br><br>普通fork() : clone(CLONE_SIGHAND, <span class="hljs-number">0</span>);<br>vfork() : clone(CLONE_VFORK | CLONE_VM | CLONE_SIGHAND, <span class="hljs-number">0</span>);<br></code></pre></td></tr></table></figure>
+<h3 id="内核级线程"><a href="#内核级线程" class="headerlink" title="内核级线程"></a>内核级线程</h3><p>通过<code>kthreadd</code>内核<u>进程</u>创建新内核<u>线程</u>，内核线程没有独立的地址空间(<code>task_struct::mm=Null</code>)，使用kernel_thread函数创建，周期性执行，像：网络连接的维护等。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// 创建内核线程，创建后处于不可运行状态</span><br><span class="hljs-function">struct task_struct *<span class="hljs-title">kthread_create</span><span class="hljs-params">(<span class="hljs-keyword">int</span> (*threadfn)(<span class="hljs-keyword">void</span> *data),</span></span><br><span class="hljs-function"><span class="hljs-params">				   <span class="hljs-keyword">void</span> *data,</span></span><br><span class="hljs-function"><span class="hljs-params">				   <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> namefmt[],</span></span><br><span class="hljs-function"><span class="hljs-params">				   ...)</span></span>;<br><span class="hljs-comment">// 唤醒进程</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">wake_up_process</span><span class="hljs-params">(struct task_struct *p)</span></span>;<br><span class="hljs-comment">// 实现创建进程并启动</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> kthread_run(threadfn, data, namefmt, ...)			   \</span><br>(&#123;									   \<br>	struct task_struct *__k						   \<br>		= kthread_create(threadfn, data, namefmt, ## __VA_ARGS__); \<br>	<span class="hljs-keyword">if</span> (!IS_ERR(__k))						   \<br>		wake_up_process(__k);					   \<br>	__k;								   \<br>&#125;)<br><span class="hljs-comment">// 内核线程启动后知道do_exit()或其他内核部分调用kthread_stop退出</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">kthread_stop</span><span class="hljs-params">(struct task_struct *k)</span> <span class="hljs-comment">// k为kthread_create所获得值，即PCB的地址</span></span><br></code></pre></td></tr></table></figure>
+<h4 id="特殊内核进程"><a href="#特殊内核进程" class="headerlink" title="特殊内核进程"></a>特殊内核进程</h4><p><strong>进程0</strong>：闲逛进程，由内核初始化时的start_kernel函数创建的内核进程swap，PID=0，执行的事cpu_idle函数（只有hlt汇编指令），使系统闲置时减少电量消耗与热产生。</p>
+<p><strong>进程1</strong>：init进程，首先初始化为内核线程kernel_init，然后使用execve系统调用，装入用户态下的可执行文件init（/sbin/init），init为一个由内核进程启动的普通进程，处于用户态下的第一个进程，且永不停止。</p>
+<h2 id="进程终结"><a href="#进程终结" class="headerlink" title="进程终结"></a>进程终结</h2><figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs apl">进程的结束：依靠do_exit(), include\linux\exit.c    -&gt; struct task_struct *tsk &#x3D; current : 获得当前进程的PCB地址    -&gt; tsk-&gt;flags |&#x3D; PF_EXITING    -&gt; del_timer_sync(&amp;tsk-&gt;real_timer) : 删除该进程的内核定时器    -&gt; __exit_mm(tsk);exit_sem(tsk);__exit_files(tsk);__exit_fs(tsk);exit_namespace(tsk);exit_itimers(tsk);exit_thread() : 释放占用资源    -&gt; exit_notify : 想父进程发送信号，给结束进程的子进程寻找养父 &#x3D; 线程组中其他线程&#x2F;init进程，并修改task_struct::exit_state &#x3D; EXIT_ZOMBIE    -&gt; schedule : 切换到新进程，并永不返回到 do_exit函数中此时存在唯一目的就是向父进程提供信息而进程终结时的清理工作与进程描述符PCB的删除被分开执行，当exit后为僵死状态，PCB还没删除，无法用kill杀死，只能通过父进程调用wait对其进行清理，而每次wait只能回收一个子进程。当生成孤儿进程时，在父进程退出的do_exit函数中调用的exit_notify函数，调用了forget_original_parent，为子进程设置新的父进程，同时为ptrace设置新的父进程（ptrace : 使得父进程可以观察和控制子进程的执行过程）<br></code></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>OS</category>
       </categories>
   </entry>
   <entry>
@@ -465,57 +468,54 @@ d_i = \frac{1}{M} \sum^M_{m = 1} Z^*_{i,m} \cdot c_m</script><h1 id="五、宽�
       </tags>
   </entry>
   <entry>
-    <title>计网相关概率</title>
-    <url>/2021/06/17/network/notion/</url>
-    <content><![CDATA[<h1 id="计算机网络"><a href="#计算机网络" class="headerlink" title="计算机网络"></a>计算机网络</h1><p>信息时代的核心就是网络，而熟悉的网络有：<strong>电信网络</strong>、<strong>有线电视网</strong>络和<strong>计算机网络</strong>，而计算机网络中发展和影响最大的当属 <strong>Internet</strong>（译作因特网或互联网）。</p>
-<h2 id="互联网的组成"><a href="#互联网的组成" class="headerlink" title="互联网的组成"></a>互联网的组成</h2><p>计算机网络由<strong>节点结</strong>(node) 和<strong>链路</strong>(link) 组成，而<strong>互连网</strong>则是由多个网络与路由器组成的网络，而通过TCP/IP协议使得计算机都能通过互连网通信，就形成了<strong>互联网</strong>。（Internet为特指，而internet为泛指）</p>
-<p>而互联网主要划分为<strong>边缘部分</strong>（用户直接使用）和<strong>核心部分</strong>（为边缘部分提供服务）</p>
-<p>边缘部分：将接入互联网的设备称为<strong>主机</strong>或<strong>端系统</strong>，端系统通过<strong>因特网服务提供商（ISP）</strong>接入因特网，端系统之间一般通过<strong>C/S方式</strong>或者<strong>P2P方式</strong>进行通讯。</p>
-<p>接入网AN：端系统通过物理连接到<strong>边缘路由器</strong>形成的网络。</p>
-<p>核心部分：主要实现的功能是端系统之间数据的交换。其有两种方法：</p>
+    <title>进程调度</title>
+    <url>/2021/08/18/os/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/</url>
+    <content><![CDATA[<h1 id="进程调度"><a href="#进程调度" class="headerlink" title="进程调度"></a>进程调度</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>批处理系统与多任务系统：最初的系统为批处理系统，由于<strong>IO约束型任务</strong>与<strong>CPU约束型任务</strong>都是依次执行，造成CPU的利用率低下，从而发展称为多任务系统。在单处理器机上，执行到IO约束型任务时，可以通过调度算法实现切出，而IO结束后，再通过信号切入，充分利用CPU。</p>
+<p>而由于多用户系统的出现，需要实现多个进程同时执行，在Linux下，采用<strong>抢占式多任务</strong>，通过系统的调度程序对进程实现强制挂起（抢占），而对于单个程序在抢占前能占用CPU的时间称为<strong>时间片</strong>。（非抢占多任务：除非进程自行停止，否则将一直执行）</p>
+<h2 id="分析调度算法"><a href="#分析调度算法" class="headerlink" title="分析调度算法"></a>分析调度算法</h2><p>调度算法的评估：响应时间、吞吐量（完成任务量）</p>
+<p>响应时间小 -&gt; 切换次数增多 -&gt; 系统内耗大 -&gt; 吞吐量小</p>
+<p>一般情况下，Linux会更倾向于调度IO约束型任务，缩短响应时间，提升用户体验</p>
+<p>批处理系统调度:</p>
 <ul>
-<li><strong>分组交换</strong>：交换端系统之间的<strong>报文</strong>，对长报文划分为小报文，则为<strong>分组</strong>。而分组从发送源到目的地中除了经过通信链路，还需要经过<strong>分组交换机</strong>（包括<strong>路由器</strong>和<strong>链路交换机</strong>）。分组发送到路由器，而路由器获得分组后将通过目的地的IP地址和<strong>路由选择协议</strong>计算出分组将转发到哪条链路上。</li>
-<li><strong>电路交换</strong>：其在端系统之间建立一条专用的<strong>端对端连接</strong>，在通信结束前将一直占用资源（缓存，链路传输速率），而连接电路的实现是通过<strong>频分复用FDM</strong>或者<strong>时分复用TDM</strong>等来实现的，从而将物理链路划分为端系统之间专用的连接。</li>
+<li>FCFS先来先服务</li>
+<li>SJF短作业优先 ： 保证了响应时间小</li>
 </ul>
-<h2 id="互联网的网络结构"><a href="#互联网的网络结构" class="headerlink" title="互联网的网络结构"></a>互联网的网络结构</h2><p><strong>互联网服务提供商ISP</strong>：将接入ISP的作为<strong>客户</strong>，而传输ISP作为<strong>提供商</strong>，三层ISP结构则一般指的是主干ISP（第一层），区域ISP，本地ISP。常见的第一层ISP有国内的中国电信、联通、移动、长城等与美国四大运营商等。不同的第一层ISP直接属于<strong>竞争</strong>关系，而除第一层ISP外，其他ISP可以采取<strong>多宿</strong>与多个提供商ISP连接，同时，相同等级结构的一对ISP能够进行<strong>对等</strong>，将其网络连接到一起从而免去之间的流量费用。</p>
-<p><strong>互联网交换点IXP</strong>：第三方客户可以创建一个IXP将多个ISP在此对等。</p>
-<p><strong>内容提供商网络</strong>：其通过建立专用的TCP/IP网络，独立于公共互联网，仅承载进入其服务器的流量，从而减少对顶层ISP支付的费用。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/notion/1.jpg" alt=""></p>
-<h1 id="时延、丢包与吞吐量"><a href="#时延、丢包与吞吐量" class="headerlink" title="时延、丢包与吞吐量"></a>时延、丢包与吞吐量</h1><p><strong>带宽</strong>：单位时间内某<strong>信道</strong>所能经过的<strong>最高数据率</strong>，单位为比特每秒 $bit/s$；</p>
-<p><strong>吞吐量</strong>：单位时间内通过某个网络（或信道、接口等）的<strong>实际数据量</strong>，其受到带宽的限制，常用每秒传输的比特($bit/s$)/字节数($byte/s$)/帧数表示；</p>
-<p><strong>时延</strong>：分组网络中比较重要的时延有：</p>
+<p>交互式系统调度:</p>
 <ul>
-<li><strong>处理时延</strong>：部分为路由器检查分组首部与确定分组导向链路所产生的时延；</li>
-<li><strong>排队时延</strong>：在队列中，在路由器中等待传输时产生的时延，对于特定分组，其排队时延取决于在其之前到达的正在等待传输的分组数量，若队列为空，且没有分组正在传输，则排队时延为0；</li>
-<li><strong>传输时延</strong>：将一个分组传输出路由器所需的时间，仅取决于分组长度 $L\ bit$ 与相邻路由器之间链路传输速率 $R\ bps\ (即b/s)$ ，则传输时延 $d_{trans}=L/R$ ；</li>
-<li><strong>传播时延</strong>：从链路起点到目的路由器所需时间，传播速率仅取决于该链路的物理媒体（即光纤、双绞铜线等），而传播时延仅取决于传播速率 $s$ 与两路由器之间的物理距离 $d$ ，$d_{prop} = d/s$；</li>
-<li>而总时延一般等于 $d<em>{nodal} = d</em>{proc} + d<em>{queue} + d</em>{trans} + d_{prop}$，</li>
+<li>RR时间片轮转调度 ： 设置时间片，时间片大-&gt;响应时间长 | 时间片小-&gt;吞吐量小，一般时间片默认设置为10ms，同时引入了进程切换(批处理中每次处理一个任务，非抢占式，因此没有进程概念)</li>
+<li><p>优先级调度PSA</p>
+</li>
+<li><p>高响应比优先HRRN：前台RR，后台SJF，任务优先级应动态调整，能够调整CPU时间保证后台程序能充分应用CPU，同时要以轮转调度为核心，保证前台响应（Linux0.11）</p>
+</li>
+<li>多级反馈队列调度</li>
+<li>O(1)调度器（Linux2.5）</li>
+<li>公平分享调度算法 -&gt; 完全公平调度算法CFS（Linux2.6）</li>
 </ul>
-<p><strong>流量强度</strong>：用于估计排队时延的范围，用 $a\ pkt/s\ (即分组/秒)$ 表示分组到达队列的平均速率，$R$ 为传输速率，假定所有分组长度都为 $L\ bit$ ，则比特到达队列的平均速率为 $La\ bps$，假设队列无限大，流量强度则为 $La/R$。而当 $La/R&gt;1$ 时，队列中分组将无限增大。</p>
-<p><strong>丢包</strong>：由于路由器中缓存有限，即队列长度有限，则当队列填满时，将丢弃分组。</p>
-<p><em>PS：可通过 Traceroute （ Windows 下程序名为 tracert ）测量某目的地到本地主机中经过的路由器中发生的时延。</em></p>
-<h1 id="网络协议"><a href="#网络协议" class="headerlink" title="网络协议"></a>网络协议</h1><p>网络协议指的是计算机网络中互相通信的对等实体之间交换信息时所必须遵守的规则的集合。用于约定多个通信实体之间交换的报文格式和顺序，以及报文发送和/或接收一条报文或其他事件所采用的动作。</p>
-<h2 id="协议分层"><a href="#协议分层" class="headerlink" title="协议分层"></a>协议分层</h2><p>网络协议采用<strong>分层</strong>的体系结构，每层向上层提供<strong>服务</strong><br>优点： </p>
-<ol>
-<li>各层之间是独立的。某一层并不需要知道它下一层是如何实现的，而仅仅需要知道该层通过层间的接口所提供的服务。由于每一层只实现一种相对独立的功能，因而可以将一个难以处理的复杂问题分解为若干个较容易处理的更小问题，这样，整个问题的复杂度就下降了；</li>
-<li>灵活性好，可以降低层与层之间的依赖。当任何一层发生变化时，只要层间接口关系保持不变，则在这层以上或以下各层均不受影响，此外，对某一层提供的服务还可以进行修改。当某层提供的服务不再需要时，甚至可以将这层取消；</li>
-<li>结构上可分割开。各层都可以采用最合适的技术来实现；</li>
-<li>易于实现和维护。这种结构使得实现和调试一个庞大而又复杂的系统变得易于处理，因为整个系统已被分解为若干个相对独立的子系统；</li>
-<li>能促进标准化工作。因为每一层的功能及其所提供的服务都已有了精确的说明；</li>
-</ol>
-<p>缺点：</p>
-<ol>
-<li>可能会冗余较低层的功能；</li>
-<li>某层的功能需要其他层才出现的信息，违背层次分离目标；</li>
-</ol>
-<p>而各层所有协议称为<strong>协议栈</strong>，互联网的协议栈由5层组成，自顶向下依次为：<strong>应用层</strong>，<strong>传输层</strong>，<strong>网络层</strong>，<strong>数据链路层</strong>，<strong>物理层</strong>。而按照ISO划分的7层OSI模型的协议栈，将应用层拆分为应用层与<strong>表示层</strong>，传输层拆分为<strong>会话层</strong>与传输层。</p>
-<h2 id="数据封装"><a href="#数据封装" class="headerlink" title="数据封装"></a>数据封装</h2><p>数据封装（Data Encapsulation）是指将协议数据单元（PDU）封装在一组协议头和尾中的过程。在5层网络模型中，发送端经历了：<strong>应用层报文</strong>作为数据传输到传输层，传输层在其首部加上控制信息（例如TCP的报文头），与应用层报文一起构成<strong>运输层报文段</strong>，网络层接收到报文段后在其首部添加上源和目的端地址等网络层首部信息（IP头部）构成<strong>网络层数据报</strong>（包），而数据链路层再将其作为数据，并在其首尾添加MAC头部与尾部构成<strong>链路层帧</strong>，最后将帧交给物理层，物理层将其转换为比特流进行传输。</p>
-<p>对于每一层，一个分组由首部字段与<strong>有效荷载字段</strong>构成，有效荷载通常为来自上一层的分组。</p>
-<p>接收端从下往上，依次去除对应层的附加信息，并将数据部分传递给上一层。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/YGwhere/JsdelivrCDN/img/CN/notion/2.jpg" alt=""></p>
-]]></content>
+<h2 id="Linux0-11中进程调度的实现"><a href="#Linux0-11中进程调度的实现" class="headerlink" title="Linux0.11中进程调度的实现"></a>Linux0.11中进程调度的实现</h2><figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">schedule</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">int</span> i,next,c;<br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">task_struct</span> ** <span class="hljs-title">p</span>;</span><br>    <br>    ... <span class="hljs-comment">/* 检查中断 */</span><br>        <br>    <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>) &#123;<br>		c = <span class="hljs-number">-1</span>;<br>		next = <span class="hljs-number">0</span>;<br>		i = NR_TASKS;<br>		<span class="hljs-comment">/* PCB数组末尾，下面有判断为空 */</span><br>		p = &amp;task[NR_TASKS];<br>		<span class="hljs-keyword">while</span> (--i) &#123;<br>			<span class="hljs-keyword">if</span> (!*--p)<br>				<span class="hljs-keyword">continue</span>;<br>			<span class="hljs-comment">/* 求就绪态下的进程：c=最大counter(时间片)，i=PCB数组索引 */</span><br>			<span class="hljs-keyword">if</span> ((*p)-&gt;state == TASK_RUNNING &amp;&amp; (*p)-&gt;counter &gt; c)<br>				c = (*p)-&gt;counter, next = i;<br>		&#125;<br>		<span class="hljs-comment">/* 找到就绪态下具有最大时间片的进程 */</span><br>		<span class="hljs-keyword">if</span> (c) <span class="hljs-keyword">break</span>;<br>		<span class="hljs-comment">/* 未找到，则设置counter */</span><br>		<span class="hljs-keyword">for</span>(p = &amp;LAST_TASK ; p &gt; &amp;FIRST_TASK ; --p)<br>			<span class="hljs-keyword">if</span> (*p)<br>			<span class="hljs-comment">/*</span><br><span class="hljs-comment">			 * 当counter=0的就绪态线程，则counter=counter/2+counter的初值，即重置counter</span><br><span class="hljs-comment">			 * 当counter!=0的非就绪态线程，counter*=1.5，重新进入就绪态后，counter将上升，优先级提升</span><br><span class="hljs-comment">			 * 此处counter承担了时间片&amp;&amp;优先级的作用</span><br><span class="hljs-comment">			 */</span><br>				(*p)-&gt;counter = ((*p)-&gt;counter &gt;&gt; <span class="hljs-number">1</span>) +<br>						(*p)-&gt;priority;<br>	&#125;<br>	switch_to(next); <span class="hljs-comment">//具体实现看下文：进程切换</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>counter响应时间有界证明：</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+c(0) & = p \\
+c(1) & = \frac{c(0)}{2} + p = \frac{p}{2} + p \\
+c(2) & = \frac{c(1)}{2} + p = \frac{p}{4} + \frac{p}{2} + p \\
+& \ldots \\
+c(x) & = p + \frac{p}{2} + \frac{p}{4} + \cdots + \frac{p}{x} \\
+     & \leq 2p &\text{c(x)收敛}
+\end{align*}</script><h2 id="CFS"><a href="#CFS" class="headerlink" title="CFS"></a>CFS</h2><h2 id="进程切换"><a href="#进程切换" class="headerlink" title="进程切换"></a>进程切换</h2><h3 id="用户态进入内核态"><a href="#用户态进入内核态" class="headerlink" title="用户态进入内核态"></a>用户态进入内核态</h3><p>当执行<code>int 0x80</code> 这条语句时由用户态进入内核态时，CPU会自动按照<strong>SS、ESP、EFLAGS、CS、EIP</strong>的顺序，将这几个寄存器的值压入到内核栈中，由于执行<code>int 0x80</code>时还未进入内核，所以压入内核栈的这五个寄存器的值是用户态时的值。</p>
+<p><code>switch_to</code>实现两个内核栈的切换，对于线程来说就是切换TCB，对于进程就是切换PCB，同时修改内存映射表。</p>
+<h3 id="TSS切换-lt-span-class-”hint—top-hint—rounded”-aria-label-”x86体系下linux中的任务切换与TSS：https-blog-csdn-net-dog250-article-details-6203529"><a href="#TSS切换-lt-span-class-”hint—top-hint—rounded”-aria-label-”x86体系下linux中的任务切换与TSS：https-blog-csdn-net-dog250-article-details-6203529" class="headerlink" title="TSS切换&lt;span class=”hint—top hint—rounded” aria-label=”x86体系下linux中的任务切换与TSS：https://blog.csdn.net/dog250/article/details/6203529"></a>TSS切换<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote">&lt;span class=”hint—top hint—rounded” aria-label=”x86体系下linux中的任务切换与TSS：<a href="https://blog.csdn.net/dog250/article/details/6203529">https://blog.csdn.net/dog250/article/details/6203529</a></h3><p>“&gt;[1]&lt;/span&gt;&lt;/a&gt;&lt;/sup&gt;</p>
+<p>Linux0.11中采用的是 <strong>TSS 切换进程</strong>：</p>
+<p>TSS<sup id="fnref:2" class="footnote-ref"><a href="#fn:2" rel="footnote"><span class="hint--top hint--rounded" aria-label="任务状态段（Task State Segment）: https://wizardforcel.gitbooks.io/intel-80386-ref-manual/content/26.html
+">[2]</span></a></sup>是什么：tss是一个段，段是x86的概念，在保护模式下，段选择符参与寻址，段选择符在段寄存器中，而tss段则在tr寄存器中。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* </span><br><span class="hljs-comment"> * switch_to函数在Linux0.11中的实现</span><br><span class="hljs-comment"> * 此处 switch_to 基于intel提供的TSS机制</span><br><span class="hljs-comment"> * 此处 switch_to 仅接收一个参数 n</span><br><span class="hljs-comment"> * 用于判断第n个tss段，从gdt表中查询tss描述符对应的tss段，将tss中保存的全部寄存器的备份恢复</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> switch_to(n) &#123;\</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> &#123;</span><span class="hljs-keyword">long</span> a,b;&#125; __tmp; \<br>__asm__(<span class="hljs-string">&quot;cmpl %%ecx,_current\n\t&quot;</span> \<br>	<span class="hljs-string">&quot;je 1f\n\t&quot;</span> \<br>	<span class="hljs-string">&quot;movw %%dx,%1\n\t&quot;</span> \<br>	<span class="hljs-string">&quot;xchgl %%ecx,_current\n\t&quot;</span> \<br>	<span class="hljs-string">&quot;ljmp %0\n\t&quot;</span> \  <span class="hljs-comment">// %0 -&gt; _TSS(n) </span><br>	<span class="hljs-string">&quot;cmpl %%ecx,_last_task_used_math\n\t&quot;</span> \<br>	<span class="hljs-string">&quot;jne 1f\n\t&quot;</span> \<br>	<span class="hljs-string">&quot;clts\n&quot;</span> \<br>	<span class="hljs-string">&quot;1:&quot;</span> \<br>	::<span class="hljs-string">&quot;m&quot;</span> (*&amp;__tmp.a),<span class="hljs-string">&quot;m&quot;</span> (*&amp;__tmp.b), \<br>	<span class="hljs-string">&quot;d&quot;</span> (_TSS(n)),<span class="hljs-string">&quot;c&quot;</span> ((<span class="hljs-keyword">long</span>) task[n])); \  <span class="hljs-comment">// task为PCB数组</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="内核栈切换"><a href="#内核栈切换" class="headerlink" title="内核栈切换"></a>内核栈切换</h3><p>Linux让每个CPU使用唯一一个tss段，tr寄存器一直指向该tss段，此时，寄存器值将在切换前先压入内核栈，然后再切换内核栈，tss并不保存寄存器，仅使用tss中的esp0指向运行时进程的内核栈。切换回原进程时，先通过PCB查询esp，赋值给tss的esp字段，切换内核栈后，再将之前压栈的寄存器值出栈，恢复原进程上下文。</p>
+<p>从而使得cpu不必切换tr寄存器，节约时间。</p>
+<p>具体切换：通过PCB寻找到内核栈指针esp，然后使用ret通过esp切换到另一个内核栈，将之前压栈的寄存器都出栈，再使用iret通过CS:PC切回到另一个用户进程，并通过SS:SP切换到对应用户栈。</p>
+<h2 id="阅读文档"><a href="#阅读文档" class="headerlink" title="阅读文档"></a>阅读文档</h2><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>x86体系下linux中的任务切换与TSS：<a href="https://blog.csdn.net/dog250/article/details/6203529">https://blog.csdn.net/dog250/article/details/6203529</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span>任务状态段（Task State Segment）: <a href="https://wizardforcel.gitbooks.io/intel-80386-ref-manual/content/26.html">https://wizardforcel.gitbooks.io/intel-80386-ref-manual/content/26.html</a>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>]]></content>
       <categories>
-        <category>Computer Network</category>
+        <category>OS</category>
       </categories>
   </entry>
   <entry>
